@@ -59,10 +59,10 @@ export default async function CamerasPage() {
         <div>
           <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2">
             <Camera className="h-6 w-6 text-indigo-400" />
-            Camera Matrix
+            Rooms (House Map)
           </h1>
           <p className="text-sm text-text-secondary mt-1">
-            Real-time vision feed & AI spatial tracking across all hardware
+            Live vision feeds and pet presence across all house rooms
           </p>
         </div>
         <AddCameraDialog />
