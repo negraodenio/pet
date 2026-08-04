@@ -40,7 +40,7 @@ export default async function CamerasPage() {
           description="Scan the QR code on your Compawion camera to get started. Setup takes less than 2 minutes."
           action={{
             label: "Set up camera",
-            onClick: () => {},
+            href: "/dashboard/settings",
           }}
         />
       ) : (

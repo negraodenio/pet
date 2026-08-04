@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/shared/components/ui/Button";
+import Link from "next/link";
 
 /* =========================================================================
    EmptyState — Beautiful empty state for lists and pages
@@ -11,7 +12,8 @@ interface EmptyStateProps {
   description: string;
   action?: {
     label: string;
-    onClick: () => void;
+    onClick?: () => void;
+    href?: string;
   };
   className?: string;
 }
@@ -43,7 +45,15 @@ export function EmptyState({
         {description}
       </p>
       {action && (
-        <Button onClick={action.onClick}>{action.label}</Button>
+        action.href ? (
+          <Link href={action.href}>
+            <Button>{action.label}</Button>
+          </Link>
+        ) : action.onClick ? (
+          <Button onClick={action.onClick}>{action.label}</Button>
+        ) : (
+          <Button>{action.label}</Button>
+        )
       )}
     </div>
   );
