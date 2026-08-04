@@ -1,0 +1,43 @@
+{
+  "name": "Compawion",
+  "short_name": "Compawion",
+  "description": "The AI Operating System for Pets",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#6366F1",
+  "orientation": "portrait-primary",
+  "categories": ["lifestyle", "health"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Live Cameras",
+      "url": "/dashboard/cameras"
+    },
+    {
+      "name": "Ask AI",
+      "url": "/dashboard/assistant"
+    },
+    {
+      "name": "Events",
+      "url": "/dashboard/events"
+    }
+  ]
+}
