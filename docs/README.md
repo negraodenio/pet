@@ -11,7 +11,13 @@
 - [PO-0001 — Project One Manifesto](./foundation/PO-0001_Project_One_Manifesto.md)
 - [PO-0002 — Vision 2035 & Multi-Decade Roadmap](./foundation/PO-0002_Vision_2035.md)
 
-## 🕸️ 01 — COMPANION INTELLIGENCE MESH & ARCHITECTURE SPRINT (PO-0100 – PO-0110)
+## 🌟 01 — LIVING COMPANION MODEL (LCM) & AI SUITE (PO-0120, PO-0130, PO-0140)
+- [PO-0140 — Living Companion Model (LCM) Specification (Apex Abstraction Layer)](./ai/PO-0140_Living_Companion_Model.md)
+- [PO-0130 — Cognitive DNA Specification (Lifelong Behavioral Genome)](./ai/PO-0130_Cognitive_DNA.md)
+- [PO-0120 — Cognitive Reasoning Engine (CRE) Specification](./ai/PO-0120_Cognitive_Reasoning_Engine.md)
+- [PO-0004 — AI Brain Specification](./ai/PO-0004_AI_Brain.md)
+
+## 🕸️ 02 — COMPANION INTELLIGENCE MESH & ARCHITECTURE SPRINT (PO-0100 – PO-0110)
 - [PO-0100 — Enterprise Architecture Specification](./architecture/PO-0100_Enterprise_Architecture.md)
 - [PO-0101 — Companion Cognitive Architecture Specification](./architecture/PO-0101_Companion_Cognitive_Architecture.md)
 - [PO-0102 — Project One Brain Specification](./architecture/PO-0102_Project_One_Brain.md)
@@ -23,11 +29,6 @@
 - [PO-0108 — Cloud Platform Specification](./architecture/PO-0108_Cloud_Platform.md)
 - [PO-0109 — Scalability Strategy Specification](./architecture/PO-0109_Scalability_Strategy.md)
 - [PO-0110 — Companion Intelligence Mesh (CIM) Specification (ACR-0001 Master Pillar)](./architecture/PO-0110_Companion_Intelligence_Mesh.md)
-
-## 🧠 02 — COGNITIVE REASONING ENGINE & COGNITIVE DNA (PO-0120 & PO-0130)
-- [PO-0120 — Cognitive Reasoning Engine (CRE) Specification](./ai/PO-0120_Cognitive_Reasoning_Engine.md)
-- [PO-0130 — Cognitive DNA Specification (Lifelong Behavioral Genome)](./ai/PO-0130_Cognitive_DNA.md)
-- [PO-0004 — AI Brain Specification](./ai/PO-0004_AI_Brain.md)
 
 ## 🔌 03 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
 - [RFC-0001 through RFC-0015 (PDP 1.0 Wire Protocol Suite)](./protocols/RFC-0001-PDP-Overview.md)
@@ -43,7 +44,7 @@
 - [SPEC-0002 — Vision Device Enterprise Specification (4K Cognitive Sensor)](./hardware/SPEC-0002-Vision-Device.md)
 - [SPEC-0003 — Smart Bed Enterprise Specification (BCG Health Platform)](./hardware/SPEC-0003-Smart-Bed.md)
 
-## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM, CRE & DNA)
+## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM, CRE, DNA & LCM)
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
@@ -53,3 +54,4 @@
 - **PO-PAT-CIM-001** – **PO-PAT-CIM-003**: Companion Intelligence Mesh Patents
 - **PO-PAT-CRE-001** – **PO-PAT-CRE-003**: Cognitive Reasoning Engine Patents
 - **PO-PAT-DNA-001** – **PO-PAT-DNA-003**: Cognitive DNA Lifelong Behavioral Genome Patents
+- **PO-PAT-LCM-001** – **PO-PAT-LCM-003**: Living Companion Model Apex Abstraction Patents
