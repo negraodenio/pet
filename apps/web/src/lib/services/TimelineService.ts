@@ -1,5 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Tables, InsertTables, Json } from "@/lib/supabase/database.types";
+import {
+  createDerivedEventContext,
+  createEventContext,
+  type EventContext,
+  type EventIdentity,
+} from "@/lib/identity/EventIdentity";
 
 /* =========================================================================
    PR-011: Cognitive Timeline Engine — TimelineService
@@ -7,9 +13,9 @@ import type { Tables, InsertTables, Json } from "@/lib/supabase/database.types";
    Append-Only immutable event stream architecture.
    ========================================================================= */
 
-export type TimelineEvent = Tables<"pet_events"> & {
-  pets?: { name: string; species: string } | null;
-  devices?: { name: string; device_type: string } | null;
+export type TimelineEvent = Readonly<Tables<"pet_events">> & {
+  readonly pets?: Readonly<{ name: string; species: string }> | null;
+  readonly devices?: Readonly<{ name: string; device_type: string }> | null;
 };
 
 export type EventSource =
@@ -57,6 +63,10 @@ export interface CreateEventInput {
   recommended_action?: string;
   video_clip_url?: string;
   thumbnail_url?: string;
+  /** Explicit identity for a root event or an already-propagated flow. */
+  context?: EventContext;
+  /** Parent Timeline event for automatic derived-event identity propagation. */
+  caused_by?: EventIdentity;
 }
 
 export interface SearchFilters {
@@ -89,6 +99,11 @@ export class TimelineService {
 
     if (!profile) throw new Error("Organization not found");
 
+    const context = input.context
+      ?? (input.caused_by
+        ? createDerivedEventContext(input.caused_by, "automation")
+        : createEventContext({ actor_id: "guardian" }));
+
     const row: InsertTables<"pet_events"> = {
       org_id: profile.org_id,
       pet_id: input.pet_id ?? null,
@@ -108,6 +123,11 @@ export class TimelineService {
       video_clip_url: input.video_clip_url ?? null,
       thumbnail_url: input.thumbnail_url ?? null,
       created_by: user.id,
+      correlation_id: context.correlation_id,
+      causation_id: context.causation_id,
+      trace_id: context.trace_id,
+      request_id: context.request_id,
+      actor_id: context.actor_id,
     };
 
     const { data, error } = await supabase
@@ -223,5 +243,44 @@ export class TimelineService {
    */
   static async getLatestEvents(limit = 10): Promise<TimelineEvent[]> {
     return this.getTimeline(limit);
+  }
+
+  /** Return an event and each of its causal ancestors. */
+  static async getEventChain(eventId: string): Promise<TimelineEvent[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("get_pet_event_chain", {
+      root_event_id: eventId,
+    });
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as TimelineEvent[];
+  }
+
+  /** Return all Timeline events participating in one cognitive flow. */
+  static async getCorrelation(
+    correlationId: string,
+    limit = 100,
+  ): Promise<TimelineEvent[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("pet_events")
+      .select("*, pets(name, species), devices(name, device_type)")
+      .eq("correlation_id", correlationId)
+      .order("created_at", { ascending: true })
+      .limit(limit);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as TimelineEvent[];
+  }
+
+  /** Return an event and all Timeline events that it directly or indirectly caused. */
+  static async getCausalityTree(eventId: string): Promise<TimelineEvent[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("get_pet_event_causality_tree", {
+      root_event_id: eventId,
+    });
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as TimelineEvent[];
   }
 }

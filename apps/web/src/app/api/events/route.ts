@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
 import type { InsertTables, Enums, Json } from "@/lib/supabase/database.types";
+import { createEventContext } from "@/lib/identity/EventIdentity";
 
 /* =========================================================================
    S1-02: Event Ingestion API
@@ -82,24 +83,41 @@ export async function POST(request: NextRequest) {
       ? batchEventSchema.parse(body).events
       : [eventSchema.parse(body)];
 
-    // Insert all events with org_id — typed for Supabase strict mode
-    const rows: InsertTables<"pet_events">[] = events.map((evt) => ({
-      org_id: profile.org_id,
-      pet_id: evt.pet_id ?? null,
-      device_id: evt.device_id ?? null,
-      event_type: evt.event_type,
-      severity: evt.severity,
-      confidence: evt.confidence,
-      metadata: (evt.metadata ?? {}) as Json,
-      recommended_action: evt.recommended_action ?? null,
-      started_at: evt.started_at ?? null,
-      ended_at: evt.ended_at ?? null,
-    }));
+    const requestContext = createEventContext({ actor_id: "guardian" });
+
+    // Events in one HTTP request share trace/request identity while retaining
+    // independent correlation identity for their separate cognitive flows.
+    const rows: InsertTables<"pet_events">[] = events.map((evt) => {
+      const context = createEventContext({
+        actor_id: "guardian",
+        trace_id: requestContext.trace_id,
+        request_id: requestContext.request_id,
+      });
+
+      return {
+        org_id: profile.org_id,
+        pet_id: evt.pet_id ?? null,
+        device_id: evt.device_id ?? null,
+        event_type: evt.event_type,
+        severity: evt.severity,
+        confidence: evt.confidence,
+        metadata: (evt.metadata ?? {}) as Json,
+        recommended_action: evt.recommended_action ?? null,
+        started_at: evt.started_at ?? null,
+        ended_at: evt.ended_at ?? null,
+        created_by: user.id,
+        correlation_id: context.correlation_id,
+        causation_id: context.causation_id,
+        trace_id: context.trace_id,
+        request_id: context.request_id,
+        actor_id: context.actor_id,
+      };
+    });
 
     const { data, error } = await supabase
       .from("pet_events")
       .insert(rows)
-      .select("id, event_type, severity, created_at");
+      .select("id, event_id, correlation_id, trace_id, request_id, event_type, severity, created_at");
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

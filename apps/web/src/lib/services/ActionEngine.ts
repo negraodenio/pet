@@ -9,6 +9,22 @@ import {
   MockFeederPlugin,
 } from "@/lib/plugins/DevicePlugin";
 import type { Tables, InsertTables, Json } from "@/lib/supabase/database.types";
+import { createEventContext, type EventContext } from "@/lib/identity/EventIdentity";
+import {
+  createExecutionHash,
+  type ActionExecutionContext,
+  type ActionId,
+  type ClaimToken,
+  type IdempotencyKey,
+  type ExecutionResult,
+  ClaimConflictError,
+  createClaimToken,
+  toIdempotencyKey,
+  createExecutionWorker,
+  IdempotencyViolationError,
+  LeaseExpiredError,
+  OwnershipViolationError,
+} from "@/lib/services/ActionIdempotency";
 
 /* =========================================================================
    PR-014: Companion Action Engine (CAE) & Action Dispatcher
@@ -27,6 +43,8 @@ const SAFETY_CRITICAL_ACTIONS = [
   "CALL_GUARDIAN",
 ];
 
+const CLAIM_LEASE_MS = 5 * 60 * 1000;
+
 export class ActionDispatcher {
   private static plugins: DevicePlugin[] = [
     new TabletPlugin(),
@@ -41,9 +59,19 @@ export class ActionDispatcher {
     return plugin ?? this.plugins[0];
   }
 
-  static async dispatch(action: CompanionAction) {
+  static async dispatch(action: CompanionAction): Promise<ExecutionResult & { pluginName: string }> {
     const plugin = this.findPlugin(action.action_type);
-    const result = await plugin.execute(action);
+    const context: ActionExecutionContext = {
+      action_id: action.id as ActionId,
+      idempotency_key: action.idempotency_key as IdempotencyKey,
+      execution_hash: action.execution_hash,
+      correlation_id: action.correlation_id,
+      causation_id: action.causation_id,
+      trace_id: action.trace_id,
+      request_id: action.request_id,
+      actor_id: action.actor_id,
+    };
+    const result = await plugin.execute(action, context);
 
     return {
       pluginName: plugin.name,
@@ -58,12 +86,15 @@ export interface DispatchActionInput {
   action_type: string;
   priority?: "low" | "medium" | "high" | "critical";
   parameters?: Record<string, unknown>;
+  context?: EventContext;
+  causation_id?: string;
+  idempotency_key: IdempotencyKey;
 }
 
 export class ActionEngine {
   /**
    * 1. Dispatch an action from Cognitive Reasoning Engine output.
-   * If safety-critical, puts into awaiting_approval state.
+   * If safety-critical, creates a pending action for approval.
    */
   static async dispatchAction(input: DispatchActionInput): Promise<CompanionAction> {
     const supabase = await createClient();
@@ -80,8 +111,38 @@ export class ActionEngine {
 
     if (!pet) throw new Error("Pet not found");
 
+    let context = input.context ?? createEventContext({
+      actor_id: user ? "guardian" : "automation",
+      causation_id: input.causation_id ?? null,
+    });
+
+    if (!input.context && input.reasoning_id) {
+      const { data: reasoning } = await supabase
+        .from("cognitive_reasoning_results")
+        .select("originating_event_id, correlation_id, trace_id, request_id")
+        .eq("id", input.reasoning_id)
+        .maybeSingle();
+
+      if (reasoning?.correlation_id && reasoning.trace_id && reasoning.request_id) {
+        context = {
+          correlation_id: reasoning.correlation_id,
+          causation_id: reasoning.originating_event_id,
+          trace_id: reasoning.trace_id,
+          request_id: reasoning.request_id,
+          actor_id: context.actor_id,
+        };
+      }
+    }
+
     const requiresApproval = SAFETY_CRITICAL_ACTIONS.includes(input.action_type);
-    const initialStatus = requiresApproval ? "awaiting_approval" : "executing";
+    const initialStatus = requiresApproval ? "pending" : "approved";
+    const idempotencyKey = toIdempotencyKey(input.idempotency_key);
+    const executionHash = createExecutionHash(
+      pet.org_id,
+      input.pet_id,
+      input.action_type,
+      idempotencyKey,
+    );
 
     const insertRow: InsertTables<"companion_actions"> = {
       pet_id: input.pet_id,
@@ -92,6 +153,14 @@ export class ActionEngine {
       status: initialStatus,
       requires_approval: requiresApproval,
       parameters: (input.parameters ?? {}) as Json,
+      correlation_id: context.correlation_id,
+      causation_id: context.causation_id,
+      trace_id: context.trace_id,
+      request_id: context.request_id,
+      actor_id: context.actor_id,
+      idempotency_key: idempotencyKey,
+      execution_hash: executionHash,
+      execution_status: "pending",
     };
 
     const { data: action, error } = await supabase
@@ -100,9 +169,23 @@ export class ActionEngine {
       .select()
       .single();
 
+    if (error?.code === "23505") {
+      const existing = await this.getActionByIdempotencyKey(pet.org_id, idempotencyKey);
+      if (!existing) throw new Error("Action idempotency conflict could not be resolved.");
+      if (existing.execution_hash !== executionHash) {
+        throw new IdempotencyViolationError(idempotencyKey);
+      }
+
+      if (existing.status === "approved" && existing.execution_status === "pending") {
+        return this.executeAction(existing);
+      }
+
+      return existing;
+    }
+
     if (error || !action) throw new Error(`Action creation failed: ${error?.message}`);
 
-    // If approval required, return immediately in awaiting_approval state
+    // Approval-gated actions remain pending until a guardian approves them.
     if (requiresApproval) {
       return action as CompanionAction;
     }
@@ -116,14 +199,50 @@ export class ActionEngine {
    */
   static async executeAction(action: CompanionAction): Promise<CompanionAction> {
     const supabase = await createClient();
+    const claimToken = createClaimToken();
+    const claimedAt = new Date();
+    const claimExpiresAt = new Date(claimedAt.getTime() + CLAIM_LEASE_MS);
 
-    const dispatchResult = await ActionDispatcher.dispatch(action);
+    const { data: claimed, error: claimError } = await supabase
+      .from("companion_actions")
+      .update({
+        status: "executing",
+        execution_status: "executing",
+        executed_at: claimedAt.toISOString(),
+        claimed_at: claimedAt.toISOString(),
+        claimed_by: action.actor_id,
+        claim_token: claimToken,
+        claim_expires_at: claimExpiresAt.toISOString(),
+        execution_worker: createExecutionWorker(),
+      })
+      .eq("id", action.id)
+      .eq("status", "approved")
+      .eq("execution_status", "pending")
+      .is("claim_token", null)
+      .select()
+      .maybeSingle();
+
+    if (claimError) throw new Error(`Action claim failed: ${claimError.message}`);
+    if (!claimed) return this.getActionById(action.id);
+
+    const claimedAction = claimed as CompanionAction;
+    let dispatchResult: ExecutionResult & { pluginName: string };
+    try {
+      dispatchResult = await ActionDispatcher.dispatch(claimedAction);
+    } catch (error) {
+      dispatchResult = {
+        pluginName: "unknown",
+        success: false,
+        executionTimeMs: 0,
+        errorMessage: error instanceof Error ? error.message : "Plugin execution failed",
+      };
+    }
 
     // Create append-only Timeline Event to CLOSE THE COGNITIVE LOOP!
     let timelineEventId: string | null = null;
     try {
       const timelineEvt = await TimelineService.createEvent({
-        pet_id: action.pet_id,
+        pet_id: claimedAction.pet_id,
         event_type: "unusual",
         source: "automation",
         category: "reasoning",
@@ -132,6 +251,13 @@ export class ActionEngine {
         title: `CAE Action Executed: ${action.action_type}`,
         description: `Executed via ${dispatchResult.pluginName} (${dispatchResult.executionTimeMs}ms).`,
         recommended_action: `Action ${action.action_type} completed successfully.`,
+        context: {
+          correlation_id: claimedAction.correlation_id,
+          causation_id: claimedAction.causation_id,
+          trace_id: claimedAction.trace_id,
+          request_id: claimedAction.request_id,
+          actor_id: "automation",
+        },
       });
       timelineEventId = timelineEvt.id;
     } catch {
@@ -140,26 +266,25 @@ export class ActionEngine {
 
     // Log execution metrics
     await supabase.from("action_executions").insert({
-      action_id: action.id,
-      org_id: action.org_id,
+      action_id: claimedAction.id,
+      org_id: claimedAction.org_id,
       plugin_name: dispatchResult.pluginName,
       execution_time_ms: dispatchResult.executionTimeMs,
       success: dispatchResult.success,
       error_message: dispatchResult.errorMessage ?? null,
       timeline_event_id: timelineEventId,
+      correlation_id: claimedAction.correlation_id,
+      causation_id: claimedAction.causation_id,
+      trace_id: claimedAction.trace_id,
+      request_id: claimedAction.request_id,
+      actor_id: claimedAction.actor_id,
     });
 
-    // Update action status to completed
-    const { data: updated } = await supabase
-      .from("companion_actions")
-      .update({
-        status: dispatchResult.success ? "completed" : "failed",
-      })
-      .eq("id", action.id)
-      .select()
-      .single();
-
-    return (updated ?? action) as CompanionAction;
+    return this.finalizeClaim(
+      claimedAction.id,
+      claimToken,
+      dispatchResult.success ? "completed" : "failed",
+    );
   }
 
   /**
@@ -168,20 +293,19 @@ export class ActionEngine {
   static async approveAction(actionId: string): Promise<CompanionAction> {
     const supabase = await createClient();
 
-    const { data: action } = await supabase
+    const { data: approved, error } = await supabase
       .from("companion_actions")
-      .select()
+      .update({ status: "approved" })
       .eq("id", actionId)
-      .single();
+      .eq("status", "pending")
+      .eq("execution_status", "pending")
+      .select()
+      .maybeSingle();
 
-    if (!action) throw new Error("Action not found");
+    if (error) throw new Error(`Action approval failed: ${error.message}`);
+    if (!approved) return this.getActionById(actionId);
 
-    await supabase
-      .from("companion_actions")
-      .update({ status: "executing" })
-      .eq("id", actionId);
-
-    return this.executeAction(action as CompanionAction);
+    return this.executeAction(approved as CompanionAction);
   }
 
   /**
@@ -192,13 +316,23 @@ export class ActionEngine {
 
     const { data: updated, error } = await supabase
       .from("companion_actions")
-      .update({ status: "rejected" })
+      .update({ status: "cancelled", execution_status: "cancelled", completed_at: new Date().toISOString() })
       .eq("id", actionId)
+      .eq("status", "pending")
       .select()
-      .single();
+      .maybeSingle();
 
-    if (error || !updated) throw new Error("Rejection failed");
+    if (error) throw new Error("Rejection failed");
+    if (!updated) return this.getActionById(actionId);
     return updated as CompanionAction;
+  }
+
+  /** Cancel a claimed execution only when the caller owns its live claim token. */
+  static async cancelExecution(
+    actionId: string,
+    claimToken: ClaimToken,
+  ): Promise<CompanionAction> {
+    return this.finalizeClaim(actionId, claimToken, "cancelled");
   }
 
   /**
@@ -215,5 +349,80 @@ export class ActionEngine {
 
     if (error) return [];
     return (data ?? []) as CompanionAction[];
+  }
+
+  private static async getActionById(actionId: string): Promise<CompanionAction> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("companion_actions")
+      .select()
+      .eq("id", actionId)
+      .single();
+
+    if (error || !data) throw new Error("Action not found");
+    return data as CompanionAction;
+  }
+
+  private static async getActionByIdempotencyKey(
+    orgId: string,
+    idempotencyKey: IdempotencyKey,
+  ): Promise<CompanionAction | null> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("companion_actions")
+      .select()
+      .eq("org_id", orgId)
+      .eq("idempotency_key", idempotencyKey)
+      .maybeSingle();
+
+    if (error) throw new Error(`Action lookup failed: ${error.message}`);
+    return data as CompanionAction | null;
+  }
+
+  private static async finalizeClaim(
+    actionId: string,
+    claimToken: ClaimToken,
+    status: "completed" | "failed" | "cancelled",
+  ): Promise<CompanionAction> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("companion_actions")
+      .update({
+        status,
+        execution_status: status,
+        completed_at: new Date().toISOString(),
+        claimed_at: null,
+        claimed_by: null,
+        claim_expires_at: null,
+        execution_worker: null,
+      })
+      .eq("id", actionId)
+      .eq("status", "executing")
+      .eq("claim_token", claimToken)
+      .gt("claim_expires_at", new Date().toISOString())
+      .select()
+      .maybeSingle();
+
+    if (error) throw new Error(`Action finalization failed: ${error.message}`);
+    if (data) return data as CompanionAction;
+
+    return this.throwClaimOwnershipError(actionId, claimToken);
+  }
+
+  private static async throwClaimOwnershipError(
+    actionId: string,
+    claimToken: ClaimToken,
+  ): Promise<never> {
+    const action = await this.getActionById(actionId);
+
+    if (action.claim_token !== claimToken) {
+      throw new OwnershipViolationError(actionId);
+    }
+
+    if (action.claim_expires_at && new Date(action.claim_expires_at).getTime() <= Date.now()) {
+      throw new LeaseExpiredError(actionId);
+    }
+
+    throw new ClaimConflictError(actionId);
   }
 }

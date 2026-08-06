@@ -1,15 +1,12 @@
 import type { Tables } from "@/lib/supabase/database.types";
+import type { ActionExecutionContext, ExecutionResult } from "@/lib/services/ActionIdempotency";
 
 export type CompanionAction = Tables<"companion_actions">;
 
 export interface DevicePlugin {
   name: string;
   supports(actionType: string): boolean;
-  execute(action: CompanionAction): Promise<{
-    success: boolean;
-    executionTimeMs: number;
-    errorMessage?: string;
-  }>;
+  execute(action: CompanionAction, context: ActionExecutionContext): Promise<ExecutionResult>;
   health(): Promise<{ status: "online" | "offline" | "degraded" }>;
   capabilities(): string[];
 }
@@ -20,7 +17,7 @@ export class TabletPlugin implements DevicePlugin {
   supports(actionType: string): boolean {
     return ["PLAY_GUARDIAN_VOICE", "SHOW_FACE_ON_AI_STATION", "DISPLAY_MESSAGE"].includes(actionType);
   }
-  async execute(action: CompanionAction) {
+  async execute(action: CompanionAction, _context: ActionExecutionContext) {
     const start = Date.now();
     // Simulate tablet hardware dispatch
     await new Promise((r) => setTimeout(r, 45));
@@ -40,7 +37,7 @@ export class NotificationPlugin implements DevicePlugin {
   supports(actionType: string): boolean {
     return ["SEND_PUSH", "SEND_EMAIL", "SEND_SMS", "CALL_GUARDIAN"].includes(actionType);
   }
-  async execute(action: CompanionAction) {
+  async execute(action: CompanionAction, _context: ActionExecutionContext) {
     const start = Date.now();
     await new Promise((r) => setTimeout(r, 30));
     return { success: true, executionTimeMs: Date.now() - start };
@@ -59,7 +56,7 @@ export class MockMatterPlugin implements DevicePlugin {
   supports(actionType: string): boolean {
     return ["TURN_ON_LIGHT", "TURN_OFF_LIGHT", "PLAY_CALMING_SOUND", "ACTIVATE_WATER_ALERT"].includes(actionType);
   }
-  async execute(action: CompanionAction) {
+  async execute(action: CompanionAction, _context: ActionExecutionContext) {
     const start = Date.now();
     await new Promise((r) => setTimeout(r, 60));
     return { success: true, executionTimeMs: Date.now() - start };
@@ -78,7 +75,7 @@ export class MockONVIFPlugin implements DevicePlugin {
   supports(actionType: string): boolean {
     return ["START_RECORDING", "STOP_RECORDING", "START_OBSERVATION_MODE", "STOP_OBSERVATION_MODE"].includes(actionType);
   }
-  async execute(action: CompanionAction) {
+  async execute(action: CompanionAction, _context: ActionExecutionContext) {
     const start = Date.now();
     await new Promise((r) => setTimeout(r, 80));
     return { success: true, executionTimeMs: Date.now() - start };
@@ -97,7 +94,7 @@ export class MockFeederPlugin implements DevicePlugin {
   supports(actionType: string): boolean {
     return ["OPEN_FEEDER", "SPEAK_TO_COMPANION", "START_EMERGENCY_PROTOCOL", "CALL_VETERINARY"].includes(actionType);
   }
-  async execute(action: CompanionAction) {
+  async execute(action: CompanionAction, _context: ActionExecutionContext) {
     const start = Date.now();
     await new Promise((r) => setTimeout(r, 50));
     return { success: true, executionTimeMs: Date.now() - start };

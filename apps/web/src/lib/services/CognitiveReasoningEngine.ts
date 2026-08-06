@@ -48,6 +48,16 @@ export class CognitiveReasoningEngine {
     const pet = petResult.data;
     if (!pet || !lcmState) return [];
 
+    const originatingEvent = recentEvents.find((event) => event.id === lcmState.last_event_id)
+      ?? recentEvents[0]
+      ?? null;
+    const identity = {
+      originating_event_id: originatingEvent?.id ?? null,
+      correlation_id: originatingEvent?.correlation_id ?? null,
+      trace_id: originatingEvent?.trace_id ?? null,
+      request_id: originatingEvent?.request_id ?? null,
+    };
+
     const resultsToInsert: InsertTables<"cognitive_reasoning_results">[] = [];
 
     // Rule 1: Hydration Risk Check
@@ -65,8 +75,9 @@ export class CognitiveReasoningEngine {
           "Ambient activity increased (+12% active motion)",
           "Camera Vision sensor logged 0 water fountain visits in last 4 hours",
         ] as Json,
-        predicted_outcome: "Possible mild dehydration or lethargy if water is not consumed within 4 hours.",
-        recommendation: "Ensure Smart Water Fountain is clean and filled with fresh cool water.",
+          predicted_outcome: "Possible mild dehydration or lethargy if water is not consumed within 4 hours.",
+          recommendation: "Ensure Smart Water Fountain is clean and filled with fresh cool water.",
+          ...identity,
       });
     }
 
@@ -85,8 +96,9 @@ export class CognitiveReasoningEngine {
           "Vision Node confirmed zero restlessness or tossing in last 45 mins",
           "No vocalization or anxiety acoustic events detected",
         ] as Json,
-        predicted_outcome: "Full cognitive recovery expected. Likely active play period in ~20 minutes.",
-        recommendation: "Maintain ambient quiet environment in Living Room.",
+          predicted_outcome: "Full cognitive recovery expected. Likely active play period in ~20 minutes.",
+          recommendation: "Maintain ambient quiet environment in Living Room.",
+          ...identity,
       });
     }
 
@@ -105,8 +117,9 @@ export class CognitiveReasoningEngine {
           "Collar sensor logged elevated heart rate variability (+18%)",
           "Recent door motion event logged",
         ] as Json,
-        predicted_outcome: "Separation or territorial anxiety probability elevated.",
-        recommendation: "Play calming acoustic sound or check camera stream.",
+          predicted_outcome: "Separation or territorial anxiety probability elevated.",
+          recommendation: "Play calming acoustic sound or check camera stream.",
+          ...identity,
       });
     }
 
@@ -125,8 +138,9 @@ export class CognitiveReasoningEngine {
           `Multi-observer correlation verified by ${lcmState.observer_count} sensors`,
           "Zero critical or warning events recorded in last 24 hours",
         ] as Json,
-        predicted_outcome: "Stable, healthy routine expected for the remainder of the day.",
-        recommendation: "Continue regular feeding and walking schedule.",
+          predicted_outcome: "Stable, healthy routine expected for the remainder of the day.",
+          recommendation: "Continue regular feeding and walking schedule.",
+          ...identity,
       });
     }
 

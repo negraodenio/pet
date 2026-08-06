@@ -7,6 +7,7 @@
 ---
 
 ## 📜 00 — MASTER, FOUNDATION & 90-DAY MVP LAUNCH
+- [Project One Engineering Handbook — Final Edition](./PROJECT_ONE_ENGINEERING_HANDBOOK.md)
 - [PO-0000 — Master Architecture Specification](./00_master/PO-0000_Master_Architecture_Specification.md)
 - [PO-0200 — Venture Capital Investment Committee Memo ($5M Seed Evaluation)](./foundation/PO-0200_Venture_Capital_Investment_Memo.md)
 - [PO-0190 — Enterprise Architecture Review Board (EARB) Audit & Red/Blue Team Defense Report](./architecture/PO-0190_Enterprise_Architecture_Review_Board.md)

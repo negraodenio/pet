@@ -296,6 +296,12 @@ export type Database = {
           observers: Json;
           related_events: Json;
           created_by: string | null;
+          event_id: string;
+          correlation_id: string;
+          causation_id: string | null;
+          trace_id: string;
+          request_id: string;
+          actor_id: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
         };
         Insert: {
           id?: string;
@@ -339,24 +345,13 @@ export type Database = {
           observers?: Json;
           related_events?: Json;
           created_by?: string | null;
+          correlation_id?: string;
+          causation_id?: string | null;
+          trace_id?: string;
+          request_id?: string;
+          actor_id?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
         };
-        Update: {
-          severity?: "info" | "warning" | "critical";
-          confidence?: number;
-          metadata?: Json;
-          video_clip_url?: string | null;
-          thumbnail_url?: string | null;
-          recommended_action?: string | null;
-          ai_resolved?: boolean;
-          ended_at?: string | null;
-          source?: string;
-          category?: string;
-          title?: string | null;
-          description?: string | null;
-          location?: string | null;
-          observers?: Json;
-          related_events?: Json;
-        };
+        Update: never;
         Relationships: [
           {
             foreignKeyName: "pet_events_pet_id_fkey";
@@ -370,6 +365,13 @@ export type Database = {
             columns: ["device_id"];
             isOneToOne: false;
             referencedRelation: "devices";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pet_events_causation_id_fkey";
+            columns: ["causation_id"];
+            isOneToOne: false;
+            referencedRelation: "pet_events";
             referencedColumns: ["id"];
           }
         ];
@@ -434,6 +436,14 @@ export type Database = {
           current_summary: string | null;
           reasoning_summary: string | null;
           last_event_id: string | null;
+          correlation_id: string | null;
+          trace_id: string | null;
+          request_id: string | null;
+          version: number;
+          last_processed_event_id: string | null;
+          last_processed_event_created_at: string | null;
+          processing_state: "idle" | "processing" | "failed";
+          updated_by: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
           updated_at: string;
         };
         Insert: {
@@ -461,6 +471,14 @@ export type Database = {
           current_summary?: string | null;
           reasoning_summary?: string | null;
           last_event_id?: string | null;
+          correlation_id?: string | null;
+          trace_id?: string | null;
+          request_id?: string | null;
+          version?: number;
+          last_processed_event_id?: string | null;
+          last_processed_event_created_at?: string | null;
+          processing_state?: "idle" | "processing" | "failed";
+          updated_by?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
           updated_at?: string;
         };
         Update: {
@@ -484,6 +502,14 @@ export type Database = {
           current_summary?: string | null;
           reasoning_summary?: string | null;
           last_event_id?: string | null;
+          correlation_id?: string | null;
+          trace_id?: string | null;
+          request_id?: string | null;
+          version?: number;
+          last_processed_event_id?: string | null;
+          last_processed_event_created_at?: string | null;
+          processing_state?: "idle" | "processing" | "failed";
+          updated_by?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
           updated_at?: string;
         };
         Relationships: [
@@ -499,6 +525,13 @@ export type Database = {
             columns: ["org_id"];
             isOneToOne: false;
             referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "living_companion_models_last_processed_event_id_fkey";
+            columns: ["last_processed_event_id"];
+            isOneToOne: false;
+            referencedRelation: "pet_events";
             referencedColumns: ["id"];
           }
         ];
@@ -522,6 +555,10 @@ export type Database = {
           status: string;
           created_at: string;
           updated_at: string;
+          originating_event_id: string | null;
+          correlation_id: string | null;
+          trace_id: string | null;
+          request_id: string | null;
         };
         Insert: {
           id?: string;
@@ -541,6 +578,10 @@ export type Database = {
           status?: string;
           created_at?: string;
           updated_at?: string;
+          originating_event_id?: string | null;
+          correlation_id?: string | null;
+          trace_id?: string | null;
+          request_id?: string | null;
         };
         Update: {
           reasoning_type?: string;
@@ -555,6 +596,10 @@ export type Database = {
           expires_at?: string | null;
           status?: string;
           updated_at?: string;
+          originating_event_id?: string | null;
+          correlation_id?: string | null;
+          trace_id?: string | null;
+          request_id?: string | null;
         };
         Relationships: [
           {
@@ -569,6 +614,13 @@ export type Database = {
             columns: ["org_id"];
             isOneToOne: false;
             referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "cognitive_reasoning_results_originating_event_id_fkey";
+            columns: ["originating_event_id"];
+            isOneToOne: false;
+            referencedRelation: "pet_events";
             referencedColumns: ["id"];
           }
         ];
@@ -586,6 +638,21 @@ export type Database = {
           parameters: Json;
           created_at: string;
           updated_at: string;
+          correlation_id: string;
+          causation_id: string | null;
+          trace_id: string;
+          request_id: string;
+          actor_id: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
+          idempotency_key: string;
+          execution_hash: string;
+          executed_at: string | null;
+          execution_status: "pending" | "executing" | "completed" | "failed" | "cancelled";
+          completed_at: string | null;
+          claimed_at: string | null;
+          claimed_by: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator" | null;
+          claim_token: string | null;
+          claim_expires_at: string | null;
+          execution_worker: string | null;
         };
         Insert: {
           id?: string;
@@ -599,6 +666,21 @@ export type Database = {
           parameters?: Json;
           created_at?: string;
           updated_at?: string;
+          correlation_id?: string;
+          causation_id?: string | null;
+          trace_id?: string;
+          request_id?: string;
+          actor_id?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
+          idempotency_key: string;
+          execution_hash: string;
+          executed_at?: string | null;
+          execution_status?: "pending" | "executing" | "completed" | "failed" | "cancelled";
+          completed_at?: string | null;
+          claimed_at?: string | null;
+          claimed_by?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator" | null;
+          claim_token?: string | null;
+          claim_expires_at?: string | null;
+          execution_worker?: string | null;
         };
         Update: {
           action_type?: string;
@@ -607,6 +689,19 @@ export type Database = {
           requires_approval?: boolean;
           parameters?: Json;
           updated_at?: string;
+          correlation_id?: string;
+          causation_id?: string | null;
+          trace_id?: string;
+          request_id?: string;
+          actor_id?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
+          execution_status?: "pending" | "executing" | "completed" | "failed" | "cancelled";
+          executed_at?: string | null;
+          completed_at?: string | null;
+          claimed_at?: string | null;
+          claimed_by?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator" | null;
+          claim_token?: string | null;
+          claim_expires_at?: string | null;
+          execution_worker?: string | null;
         };
         Relationships: [
           {
@@ -621,6 +716,13 @@ export type Database = {
             columns: ["org_id"];
             isOneToOne: false;
             referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "companion_actions_causation_id_fkey";
+            columns: ["causation_id"];
+            isOneToOne: false;
+            referencedRelation: "pet_events";
             referencedColumns: ["id"];
           }
         ];
@@ -637,6 +739,11 @@ export type Database = {
           error_message: string | null;
           timeline_event_id: string | null;
           executed_at: string;
+          correlation_id: string;
+          causation_id: string | null;
+          trace_id: string;
+          request_id: string;
+          actor_id: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
         };
         Insert: {
           id?: string;
@@ -649,6 +756,11 @@ export type Database = {
           error_message?: string | null;
           timeline_event_id?: string | null;
           executed_at?: string;
+          correlation_id?: string;
+          causation_id?: string | null;
+          trace_id?: string;
+          request_id?: string;
+          actor_id?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
         };
         Update: {
           plugin_name?: string;
@@ -657,6 +769,11 @@ export type Database = {
           success?: boolean;
           error_message?: string | null;
           timeline_event_id?: string | null;
+          correlation_id?: string;
+          causation_id?: string | null;
+          trace_id?: string;
+          request_id?: string;
+          actor_id?: "guardian" | "system" | "automation" | "device" | "veterinarian" | "administrator";
         };
         Relationships: [
           {
@@ -671,6 +788,13 @@ export type Database = {
             columns: ["org_id"];
             isOneToOne: false;
             referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "action_executions_causation_id_fkey";
+            columns: ["causation_id"];
+            isOneToOne: false;
+            referencedRelation: "pet_events";
             referencedColumns: ["id"];
           }
         ];
@@ -879,6 +1003,14 @@ export type Database = {
       get_user_org_id: {
         Args: Record<string, never>;
         Returns: string;
+      };
+      get_pet_event_chain: {
+        Args: { root_event_id: string };
+        Returns: Database["public"]["Tables"]["pet_events"]["Row"][];
+      };
+      get_pet_event_causality_tree: {
+        Args: { root_event_id: string };
+        Returns: Database["public"]["Tables"]["pet_events"]["Row"][];
       };
     };
     Enums: {
