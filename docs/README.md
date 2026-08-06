@@ -15,6 +15,7 @@
 - [PO-0002 — Vision 2035 & Multi-Decade Roadmap](./foundation/PO-0002_Vision_2035.md)
 
 ## 💻 01 — COMPANION OPERATING SYSTEM (COS) & CORE ARCHITECTURE
+- [PO-0210 — Version 2 Evolution Program (Incremental Migration Blueprint)](./architecture/PO-0210_Version_2_Evolution_Program.md)
 - [PO-0170 — Companion Operating System (COS) Specification (Master OS Blueprint)](./architecture/PO-0170_Companion_Operating_System.md)
 - [PO-0100 — Enterprise Architecture Specification](./architecture/PO-0100_Enterprise_Architecture.md)
 - [PO-0101 — Companion Cognitive Architecture Specification](./architecture/PO-0101_Companion_Cognitive_Architecture.md)
