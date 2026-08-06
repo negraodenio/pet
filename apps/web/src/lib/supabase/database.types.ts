@@ -408,6 +408,101 @@ export type Database = {
           }
         ];
       };
+      living_companion_models: {
+        Row: {
+          id: string;
+          pet_id: string;
+          org_id: string;
+          generated_at: string;
+          current_behavior: string;
+          current_activity: string;
+          current_room: string;
+          current_emotion: string;
+          stress_score: number;
+          energy_score: number;
+          hydration_score: number;
+          nutrition_score: number;
+          sleep_stage: string;
+          mobility_score: number;
+          vitality_score: number;
+          health_score: number;
+          safety_score: number;
+          confidence: number;
+          learning_progress: number;
+          observer_count: number;
+          active_observers: Json;
+          current_summary: string | null;
+          reasoning_summary: string | null;
+          last_event_id: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          pet_id: string;
+          org_id: string;
+          generated_at?: string;
+          current_behavior?: string;
+          current_activity?: string;
+          current_room?: string;
+          current_emotion?: string;
+          stress_score?: number;
+          energy_score?: number;
+          hydration_score?: number;
+          nutrition_score?: number;
+          sleep_stage?: string;
+          mobility_score?: number;
+          vitality_score?: number;
+          health_score?: number;
+          safety_score?: number;
+          confidence?: number;
+          learning_progress?: number;
+          observer_count?: number;
+          active_observers?: Json;
+          current_summary?: string | null;
+          reasoning_summary?: string | null;
+          last_event_id?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          current_behavior?: string;
+          current_activity?: string;
+          current_room?: string;
+          current_emotion?: string;
+          stress_score?: number;
+          energy_score?: number;
+          hydration_score?: number;
+          nutrition_score?: number;
+          sleep_stage?: string;
+          mobility_score?: number;
+          vitality_score?: number;
+          health_score?: number;
+          safety_score?: number;
+          confidence?: number;
+          learning_progress?: number;
+          observer_count?: number;
+          active_observers?: Json;
+          current_summary?: string | null;
+          reasoning_summary?: string | null;
+          last_event_id?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "living_companion_models_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: true;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "living_companion_models_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       timeline_entries: {
         Row: {
           id: string;

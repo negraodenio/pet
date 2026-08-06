@@ -2,39 +2,54 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { createClient } from "@/lib/supabase/server";
 import { TimelineService } from "@/lib/services/TimelineService";
+import { LivingCompanionModelService } from "@/lib/services/LivingCompanionModelService";
 
 /**
  * AI Assistant — Chat endpoint using Vercel AI SDK.
- * Powered by Cognitive Timeline Engine events.
+ * Powered by Cognitive Timeline Engine + Living Companion Model (LCM) Runtime.
  */
 export async function POST(request: Request) {
   const { messages } = await request.json();
 
   const supabase = await createClient();
 
-  // Fetch pet context & Cognitive Timeline events for the AI
+  // Fetch pet context, LCM states, and Cognitive Timeline events for the AI
   const [petsResult, timelineEvents] = await Promise.all([
-    supabase.from("pets").select("name, species, breed, birth_date, weight_kg"),
+    supabase.from("pets").select("id, name, species, breed, birth_date, weight_kg"),
     TimelineService.getLatestEvents(20).catch(() => []),
   ]);
 
   const pets = petsResult.data ?? [];
+  let lcmSummaries = "";
+
+  if (pets.length > 0) {
+    const lcmStates = await Promise.all(
+      pets.map((p) => LivingCompanionModelService.getCurrentState(p.id).catch(() => null)),
+    );
+    lcmSummaries = lcmStates
+      .filter(Boolean)
+      .map((lcm) => `- ${lcm?.pets?.name}: ${lcm?.current_summary} (Behavior: ${lcm?.current_behavior}, Room: ${lcm?.current_room}, Vitality: ${lcm?.vitality_score}%, Stress: ${lcm?.stress_score}%)`)
+      .join("\n");
+  }
 
   const systemPrompt = `You are Compawion AI, the cognitive intelligence layer of Compawion OS.
-You answer using real-time observations from the Cognitive Timeline Engine.
+You ground 100% of your responses using real-time observations from the Cognitive Timeline Engine and the Living Companion Model (LCM) Runtime.
 
-CURRENT PETS:
+REGISTERED COMPANIONS:
 ${pets.map((p) => `- ${p.name} (${p.species}, ${p.breed ?? "unknown breed"}, ${p.weight_kg ? `${p.weight_kg}kg` : "unknown weight"})`).join("\n") || "No pets registered yet."}
 
-COGNITIVE TIMELINE EVENTS (last 20 observations):
+REAL-TIME LIVING COMPANION MODEL (LCM STATE — "NOW"):
+${lcmSummaries || "Initializing baseline LCM states..."}
+
+COGNITIVE TIMELINE EVENTS (HISTORY — "WHAT HAPPENED"):
 ${timelineEvents.map((e) => `- [${e.source.toUpperCase()}/${e.category.toUpperCase()}] [${e.severity}] ${e.title ?? e.event_type} (${e.pets?.name ?? "Companion"}) — confidence: ${Math.round(e.confidence * 100)}% — ${e.created_at}`).join("\n") || "No events recorded in timeline yet."}
 
 GUIDELINES:
-- Be warm, caring, highly observant, and knowledgeable
-- Ground your answers in real timeline observations first
-- Reference specific pets by name when relevant
-- When discussing health or critical alerts, include clinical disclaimers to consult a licensed veterinarian
-- Be concise, clear, and structured`;
+- Be warm, caring, highly observant, and deeply knowledgeable
+- Ground your answers in real-time LCM state ("NOW") and Timeline events ("HISTORY")
+- Reference specific companions by name
+- Include clinical disclaimers to consult a licensed veterinarian for medical issues
+- Be concise, structured, and empathetic`;
 
   const openrouterKey = process.env.OPENROUTER_API_KEY;
   const openaiKey = process.env.OPENAI_API_KEY;
