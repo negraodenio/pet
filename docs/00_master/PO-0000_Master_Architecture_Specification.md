@@ -1,5 +1,5 @@
 # 🏛️ PO-0000 — PROJECT ONE MASTER ARCHITECTURE SPECIFICATION
-**Version**: 3.0 (LCM & ACR-0001 Updated)  
+**Version**: 4.0 (Companion OS & ACR-0001 Updated)  
 **Classification**: Enterprise Technical Specification  
 **Authors**: Chief Enterprise Architect, Chief AI Scientist & Technical Architecture Council  
 **Target Horizon**: 2026 – 2050  
@@ -10,10 +10,13 @@
 
 **Project One** is an enterprise-grade, multi-platform **Companion Intelligence Architecture** designed to establish a global digital twin, cognitive intelligence, and hardware abstraction ecosystem for companion animals.
 
-At the apex of the architecture sits the **Living Companion Model (LCM) [PO-0140]**, the highest cognitive abstraction layer synthesizing the Digital Twin, Cognitive DNA, Knowledge Graph, Reasoning Engine, and Companion Intelligence Mesh into a living, lifelong cognitive representation.
+Under **PO-0170**, Project One operates under **Companion OS (COS)**, an event-driven, multi-runtime operating system orchestrating the Living Companion Model (LCM) [PO-0140], Cognitive DNA [PO-0130], Companion Intelligence Mesh (CIM) [PO-0110], and Pet Device Protocol (PDP 1.0) [RFC-0001].
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
+│                COMPANION OPERATING SYSTEM (COS - PO-0170)                   │
+│      10 Core Runtimes  •  Companion Kernel  •  Universal Command Palette    │
+├─────────────────────────────────────────────────────────────────────────────┤
 │                 LIVING COMPANION MODEL (LCM - PO-0140)                      │
 │      Life Graph  •  Identity Graph  •  State Vector S_lcm(t)  •  Vault       │
 ├─────────────────────────────────────────────────────────────────────────────┤
@@ -37,15 +40,17 @@ At the apex of the architecture sits the **Living Companion Model (LCM) [PO-0140
 
 ## 2. THE MASTER PILLARS
 
-1. **Living Companion Model (LCM)**: The highest cognitive abstraction layer & Life Graph [PO-0140].
-2. **Project One Brain & CRE**: The 14 cortices & Reasoning Engine [PO-0004 / PO-0120].
-3. **Cognitive DNA**: Lifelong 128-dimensional Behavior Genome vector [PO-0130].
-4. **Project One Cloud**: Multi-tenant RLS event infrastructure.
-5. **Project One Connect**: PDP 1.0, PDL schemas, and Hardware Abstraction Layer (HAL).
-6. **Project One Devices**: Universal sensory node matrix.
-7. **Project One Labs**: Patent portfolio & clinical veterinary research.
-8. **Companion Intelligence Mesh (CIM)**: Distributed semantic observation fusion engine [PO-0110].
+1. **Companion Operating System (COS)**: The master multi-runtime operating system [PO-0170].
+2. **Living Companion Model (LCM)**: The apex cognitive abstraction layer & Life Graph [PO-0140].
+3. **Guardian Intelligence Engine (GIE)**: Human-centered explainable AI communication [PO-0150].
+4. **Project One Brain & CRE**: The 14 cortices & Reasoning Engine [PO-0004 / PO-0120].
+5. **Cognitive DNA**: Lifelong 128-dimensional Behavior Genome vector [PO-0130].
+6. **Project One Cloud**: Multi-tenant RLS event infrastructure.
+7. **Project One Connect**: PDP 1.0, PDL schemas, and Hardware Abstraction Layer (HAL).
+8. **Project One Devices**: Universal sensory node matrix.
+9. **Project One Labs**: Patent portfolio & clinical veterinary research.
+10. **Companion Intelligence Mesh (CIM)**: Distributed semantic observation fusion engine [PO-0110].
 
 ---
 
-*Project One Master Architecture Specification v3.0.*
+*Project One Master Architecture Specification v4.0.*
