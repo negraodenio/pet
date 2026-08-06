@@ -11,8 +11,9 @@
 - [PO-0001 — Project One Manifesto](./foundation/PO-0001_Project_One_Manifesto.md)
 - [PO-0002 — Vision 2035 & Multi-Decade Roadmap](./foundation/PO-0002_Vision_2035.md)
 
-## 🌟 01 — LIVING COMPANION MODEL (LCM) & AI SUITE (PO-0120, PO-0130, PO-0140)
+## 🌟 01 — LIVING COMPANION MODEL, AI REASONING & GUARDIAN SUITE
 - [PO-0140 — Living Companion Model (LCM) Specification (Apex Abstraction Layer)](./ai/PO-0140_Living_Companion_Model.md)
+- [PO-0150 — Guardian Intelligence Engine (GIE) Specification (Human-Centered AI)](./ai/PO-0150_Guardian_Intelligence_Engine.md)
 - [PO-0130 — Cognitive DNA Specification (Lifelong Behavioral Genome)](./ai/PO-0130_Cognitive_DNA.md)
 - [PO-0120 — Cognitive Reasoning Engine (CRE) Specification](./ai/PO-0120_Cognitive_Reasoning_Engine.md)
 - [PO-0004 — AI Brain Specification](./ai/PO-0004_AI_Brain.md)
@@ -44,7 +45,7 @@
 - [SPEC-0002 — Vision Device Enterprise Specification (4K Cognitive Sensor)](./hardware/SPEC-0002-Vision-Device.md)
 - [SPEC-0003 — Smart Bed Enterprise Specification (BCG Health Platform)](./hardware/SPEC-0003-Smart-Bed.md)
 
-## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM, CRE, DNA & LCM)
+## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM, CRE, DNA, LCM & GIE)
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
@@ -55,3 +56,4 @@
 - **PO-PAT-CRE-001** – **PO-PAT-CRE-003**: Cognitive Reasoning Engine Patents
 - **PO-PAT-DNA-001** – **PO-PAT-DNA-003**: Cognitive DNA Lifelong Behavioral Genome Patents
 - **PO-PAT-LCM-001** – **PO-PAT-LCM-003**: Living Companion Model Apex Abstraction Patents
+- **PO-PAT-GIE-001** – **PO-PAT-GIE-003**: Guardian Intelligence Engine Human-Centered AI Patents
