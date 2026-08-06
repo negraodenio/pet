@@ -23,25 +23,31 @@
 - [PO-0108 — Cloud Platform Specification](./architecture/PO-0108_Cloud_Platform.md)
 - [PO-0109 — Scalability Strategy Specification](./architecture/PO-0109_Scalability_Strategy.md)
 
-## 🔌 03 — PROTOCOLS & SCHEMAS
-- [PO-0005 — PDP 1.0 (Pet Device Protocol Specification)](./protocols/PO-0005_PDP_1.0_Pet_Device_Protocol.md)
-- [PO-0006 — PDL (Pet Description Language Specification)](./protocols/PO-0006_PDL_Pet_Description_Language.md)
+## 🔌 02 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
+- [RFC-0001 — PDP Overview & Scope](./protocols/RFC-0001-PDP-Overview.md)
+- [RFC-0002 — PDP Architecture & Stack Layering](./protocols/RFC-0002-PDP-Architecture.md)
+- [RFC-0003 — PDP Discovery Specification](./protocols/RFC-0003-PDP-Discovery.md)
+- [RFC-0004 — PDP Secure Pairing Specification (<2 min Flow)](./protocols/RFC-0004-PDP-Pairing.md)
+- [RFC-0005 — PDP Authentication Specification](./protocols/RFC-0005-PDP-Authentication.md)
+- [RFC-0006 — PDP Encryption & Replay Protection](./protocols/RFC-0006-PDP-Encryption.md)
+- [RFC-0007 — PDP Semantic Events Specification](./protocols/RFC-0007-PDP-Events.md)
+- [RFC-0008 — PDP Actions & Interventions Specification](./protocols/RFC-0008-PDP-Actions.md)
+- [RFC-0009 — PDP Telemetry & Diagnostics Specification](./protocols/RFC-0009-PDP-Telemetry.md)
+- [RFC-0010 — PDP Enterprise OTA Specification](./protocols/RFC-0010-PDP-OTA.md)
+- [RFC-0011 — PDP Device Lifecycle Specification](./protocols/RFC-0011-PDP-Device-Lifecycle.md)
+- [RFC-0012 — PDP Versioning & Extensibility Specification](./protocols/RFC-0012-PDP-Versioning.md)
+- [RFC-0013 — PDP Compatibility & Translation Specification](./protocols/RFC-0013-PDP-Compatibility.md)
+- [RFC-0014 — PDP Hardware Security & Trust Specification](./protocols/RFC-0014-PDP-Security.md)
+- [RFC-0015 — "Works with Project One" Certification Specification](./protocols/RFC-0015-PDP-Certification.md)
 
-## 🏠 04 — HARDWARE ECOSYSTEM
+## 🏠 03 — HARDWARE ECOSYSTEM
 - [PO-0007 — Universal Device Hub](./hardware/PO-0007_Device_Hub.md)
 - [PO-0008 — AI Station (Ambient Tablet)](./hardware/PO-0008_AI_Station_Tablet.md)
 - [PO-0009 — Vision Device (4K AI Optical Sensor)](./hardware/PO-0009_Vision_Device.md)
 - [PO-0010 — Smart Bed (BCG Vital Sensor Platform)](./hardware/PO-0010_Smart_Bed.md)
 
-## 🔒 05 — PATENT CANDIDATES PORTFOLIO
-- **PO-PAT-000**: *Multi-Layer Event-Driven Hardware Abstraction Architecture for Companion Animal Digital Twins*
-- **PO-PAT-001**: *Multi-Modal Non-Invasive Behavioral Anomaly Detection & Autonomous Acoustic Intervention System*
-- **PO-PAT-0101**: *Multi-Cortex Asynchronous Cognitive Ensemble Architecture*
-- **PO-PAT-0102**: *Dynamic Fallback & Consensus Orchestration System for Heterogeneous Multi-Modal Models*
-- **PO-PAT-0103**: *Continuous Physiological & Behavioral Digital Twin State Vector Representation*
-- **PO-PAT-0104**: *Semantic Knowledge Graph System for Cross-Domain Animal Biometrics*
-- **PO-PAT-0105**: *Sub-Second Event Partitioning & Contextual Fanout Broker for Multi-Modal Telemetry*
-- **PO-PAT-0106**: *Self-Describing Semantic Hardware Abstraction Protocol*
-- **PO-PAT-0107**: *Multi-Tenant Cryptographic Identity & Context-Aware Access Control*
-- **PO-PAT-0108**: *Asynchronous Offline Synchronization & Delta Reconciliation System*
-- **PO-PAT-0109**: *Multi-Tenant Partition Sharding & Contextual Time-Series Downsampling*
+## 🔒 04 — PATENT CANDIDATES PORTFOLIO (PO-PAT & PO-PAT-PDP)
+- **PO-PAT-000**: *Multi-Layer Event-Driven Hardware Abstraction Architecture*
+- **PO-PAT-001**: *Multi-Modal Behavioral Anomaly Detection & Autonomous Acoustic Intervention*
+- **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
+- **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
