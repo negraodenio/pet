@@ -35,10 +35,11 @@
 ## 📱 05 — FLAGSHIP HARDWARE PRODUCTS
 - [SPEC-0001 — AI Station Enterprise Specification (Flagship Hub)](./hardware/SPEC-0001-AI-Station.md)
 - [SPEC-0002 — Vision Device Enterprise Specification (4K Cognitive Sensor)](./hardware/SPEC-0002-Vision-Device.md)
+- [SPEC-0003 — Smart Bed Enterprise Specification (BCG Health Platform)](./hardware/SPEC-0003-Smart-Bed.md)
 - [PO-0007 — Universal Device Hub](./hardware/PO-0007_Device_Hub.md)
 - [PO-0008 — AI Station Ambient Display Summary](./hardware/PO-0008_AI_Station_Tablet.md)
 - [PO-0009 — Vision Device Summary](./hardware/PO-0009_Vision_Device.md)
-- [PO-0010 — Smart Bed (BCG Vital Sensor Platform)](./hardware/PO-0010_Smart_Bed.md)
+- [PO-0010 — Smart Bed Summary](./hardware/PO-0010_Smart_Bed.md)
 
 ## 🔒 06 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL & SPEC)
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
@@ -46,4 +47,4 @@
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
 - **PO-PAT-PDL-001** – **PO-PAT-PDL-011**: PDL 1.0 Language Standard Patents
 - **PO-PAT-HAL-001** – **PO-PAT-HAL-011**: HAL 1.0 Hardware Abstraction Patents
-- **PO-PAT-SPEC-001** – **PO-PAT-SPEC-004**: Flagship Hardware Product Patents
+- **PO-PAT-SPEC-001** – **PO-PAT-SPEC-006**: Flagship Hardware Product Patents

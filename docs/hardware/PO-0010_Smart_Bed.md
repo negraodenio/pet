@@ -1,20 +1,14 @@
 # 🛏️ PO-0010 — SMART BED SPECIFICATION
 
 > **Document ID**: PO-0010  
-> **Category**: Hardware  
-> **Status**: Smart Bed Specification  
+> **Category**: Hardware Specification  
+> **Detailed Engineering RFC**: [SPEC-0003-Smart-Bed.md](./SPEC-0003-Smart-Bed.md)  
+> **Status**: Production Hardware Standard  
 
 ---
 
 ## 1. OBJECTIVE
 
-The Smart Bed is an intelligent orthopedic sleeping platform equipped with non-invasive physiological sensors for continuous nocturnal monitoring.
+The Smart Bed is an intelligent orthopedic sleeping platform equipped with non-invasive physiological sensors (PVDF Ballistocardiography film, $32 \times 32$ pressure grid, load cell weight sensors) for continuous nocturnal monitoring.
 
----
-
-## 2. SENSOR MATRIX
-- **Heart Rate**: Ballistocardiography (BCG) sensor array.
-- **Respiration Rate**: Respiration acoustic & pressure sensors.
-- **Temperature Trend**: Micro-thermal array.
-- **Pressure Mapping**: High-density piezoresistive grid for sleeping posture & restlessness.
-- **Weight**: Precision load cells.
+For the full enterprise hardware blueprint, BOM costing, BCG wavelet FIR filtering math, and Patent Candidates, consult **[SPEC-0003-Smart-Bed.md](./SPEC-0003-Smart-Bed.md)**.
