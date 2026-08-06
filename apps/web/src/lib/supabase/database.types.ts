@@ -573,6 +573,108 @@ export type Database = {
           }
         ];
       };
+      companion_actions: {
+        Row: {
+          id: string;
+          pet_id: string;
+          org_id: string;
+          reasoning_id: string | null;
+          action_type: string;
+          priority: string;
+          status: string;
+          requires_approval: boolean;
+          parameters: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          pet_id: string;
+          org_id: string;
+          reasoning_id?: string | null;
+          action_type: string;
+          priority?: string;
+          status?: string;
+          requires_approval?: boolean;
+          parameters?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          action_type?: string;
+          priority?: string;
+          status?: string;
+          requires_approval?: boolean;
+          parameters?: Json;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "companion_actions_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "companion_actions_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      action_executions: {
+        Row: {
+          id: string;
+          action_id: string;
+          org_id: string;
+          plugin_name: string;
+          device_id: string | null;
+          execution_time_ms: number;
+          success: boolean;
+          error_message: string | null;
+          timeline_event_id: string | null;
+          executed_at: string;
+        };
+        Insert: {
+          id?: string;
+          action_id: string;
+          org_id: string;
+          plugin_name: string;
+          device_id?: string | null;
+          execution_time_ms?: number;
+          success?: boolean;
+          error_message?: string | null;
+          timeline_event_id?: string | null;
+          executed_at?: string;
+        };
+        Update: {
+          plugin_name?: string;
+          device_id?: string | null;
+          execution_time_ms?: number;
+          success?: boolean;
+          error_message?: string | null;
+          timeline_event_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "action_executions_action_id_fkey";
+            columns: ["action_id"];
+            isOneToOne: false;
+            referencedRelation: "companion_actions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "action_executions_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       timeline_entries: {
         Row: {
           id: string;

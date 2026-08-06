@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { TimelineService } from "@/lib/services/TimelineService";
 import { CognitiveReasoningEngine } from "@/lib/services/CognitiveReasoningEngine";
+import { ActionEngine } from "@/lib/services/ActionEngine";
 import { ExplainabilityPanel } from "@/features/intelligence/ExplainabilityPanel";
+import { ActionFeed } from "@/features/platform/ActionFeed";
 import { Avatar } from "@/shared/components/ui/Avatar";
 import { Badge } from "@/shared/components/ui/Badge";
 import {
@@ -20,11 +22,12 @@ export const metadata = {
 export default async function DashboardHomePage() {
   const supabase = await createClient();
 
-  const [petsResult, devicesResult, timelineEvents, topInsights] = await Promise.all([
+  const [petsResult, devicesResult, timelineEvents, topInsights, recentActions] = await Promise.all([
     supabase.from("pets").select("*").order("name"),
     supabase.from("devices").select("*").order("name"),
     TimelineService.getTimeline(15).catch(() => []),
     CognitiveReasoningEngine.getTopHouseholdInsights(3).catch(() => []),
+    ActionEngine.getRecentExecutedActions(5).catch(() => []),
   ]);
 
   const dbPets = petsResult.data ?? [];
@@ -92,6 +95,9 @@ export default async function DashboardHomePage() {
 
       {/* CRE Top Household Live Insights */}
       {topInsights.length > 0 && <ExplainabilityPanel insights={topInsights} />}
+
+      {/* CAE Recent Executed Actions */}
+      {recentActions.length > 0 && <ActionFeed actions={recentActions} />}
 
       {/* Real Cognitive Timeline Feed */}
       <div className="glass-panel p-6">
