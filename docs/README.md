@@ -8,6 +8,7 @@
 
 ## 📜 00 — MASTER, FOUNDATION & 90-DAY MVP LAUNCH
 - [PO-0000 — Master Architecture Specification](./00_master/PO-0000_Master_Architecture_Specification.md)
+- [PO-0190 — Enterprise Architecture Review Board (EARB) Audit & Red/Blue Team Defense Report](./architecture/PO-0190_Enterprise_Architecture_Review_Board.md)
 - [PO-0180 — Project One 90-Day MVP Execution Plan (Launch Directive)](./foundation/PO-0180_MVP_Execution_Plan.md)
 - [PO-0001 — Project One Manifesto](./foundation/PO-0001_Project_One_Manifesto.md)
 - [PO-0002 — Vision 2035 & Multi-Decade Roadmap](./foundation/PO-0002_Vision_2035.md)
