@@ -53,14 +53,28 @@
 - [RFC-0029 — PDL Versioning & 20-Year Compatibility Specification](./protocols/RFC-0029-PDL-Versioning.md)
 - [RFC-0030 — "PDL Certified" Compliance & Validation Specification](./protocols/RFC-0030-PDL-Certification.md)
 
-## 🏠 04 — HARDWARE ECOSYSTEM
+## 🛠️ 04 — HARDWARE ABSTRACTION LAYER (HAL 1.0) RFC SUITE (RFC-0040 – RFC-0050)
+- [RFC-0040 — HAL Overview & Scope](./hardware/RFC-0040-HAL-Overview.md)
+- [RFC-0041 — HAL Architecture & Plugin Infrastructure](./hardware/RFC-0041-HAL-Architecture.md)
+- [RFC-0042 — HAL Device Adapters Specification](./hardware/RFC-0042-HAL-Device-Adapters.md)
+- [RFC-0043 — HAL Sensor Abstraction Specification](./hardware/RFC-0043-HAL-Sensor-Abstraction.md)
+- [RFC-0044 — HAL Media Abstraction Specification](./hardware/RFC-0044-HAL-Media-Abstraction.md)
+- [RFC-0045 — HAL Actions & Actuators Specification](./hardware/RFC-0045-HAL-Actions.md)
+- [RFC-0046 — HAL Drivers Architecture Specification](./hardware/RFC-0046-HAL-Drivers.md)
+- [RFC-0047 — HAL Driver Lifecycle Specification](./hardware/RFC-0047-HAL-Lifecycle.md)
+- [RFC-0048 — HAL Error Handling & Fault Recovery Specification](./hardware/RFC-0048-HAL-ErrorHandling.md)
+- [RFC-0049 — HAL Versioning & ABI Stability Specification](./hardware/RFC-0049-HAL-Versioning.md)
+- [RFC-0050 — "HAL Certified" Driver Compliance Specification](./hardware/RFC-0050-HAL-Certification.md)
+
+## 🏠 05 — HARDWARE ECOSYSTEM
 - [PO-0007 — Universal Device Hub](./hardware/PO-0007_Device_Hub.md)
 - [PO-0008 — AI Station (Ambient Tablet)](./hardware/PO-0008_AI_Station_Tablet.md)
 - [PO-0009 — Vision Device (4K AI Optical Sensor)](./hardware/PO-0009_Vision_Device.md)
 - [PO-0010 — Smart Bed (BCG Vital Sensor Platform)](./hardware/PO-0010_Smart_Bed.md)
 
-## 🔒 05 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PO-PAT-PDP & PO-PAT-PDL)
+## 🔒 06 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL & HAL)
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
 - **PO-PAT-PDL-001** – **PO-PAT-PDL-011**: PDL 1.0 Language Standard Patents
+- **PO-PAT-HAL-001** – **PO-PAT-HAL-011**: HAL 1.0 Hardware Abstraction Patents
