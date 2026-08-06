@@ -24,8 +24,9 @@
 - [PO-0109 — Scalability Strategy Specification](./architecture/PO-0109_Scalability_Strategy.md)
 - [PO-0110 — Companion Intelligence Mesh (CIM) Specification (ACR-0001 Master Pillar)](./architecture/PO-0110_Companion_Intelligence_Mesh.md)
 
-## 🧠 02 — COGNITIVE REASONING ENGINE (CRE) & AI KERNEL (PO-0120)
+## 🧠 02 — COGNITIVE REASONING ENGINE & COGNITIVE DNA (PO-0120 & PO-0130)
 - [PO-0120 — Cognitive Reasoning Engine (CRE) Specification](./ai/PO-0120_Cognitive_Reasoning_Engine.md)
+- [PO-0130 — Cognitive DNA Specification (Lifelong Behavioral Genome)](./ai/PO-0130_Cognitive_DNA.md)
 - [PO-0004 — AI Brain Specification](./ai/PO-0004_AI_Brain.md)
 
 ## 🔌 03 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
@@ -42,7 +43,7 @@
 - [SPEC-0002 — Vision Device Enterprise Specification (4K Cognitive Sensor)](./hardware/SPEC-0002-Vision-Device.md)
 - [SPEC-0003 — Smart Bed Enterprise Specification (BCG Health Platform)](./hardware/SPEC-0003-Smart-Bed.md)
 
-## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM & CRE)
+## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM, CRE & DNA)
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
@@ -51,3 +52,4 @@
 - **PO-PAT-SPEC-001** – **PO-PAT-SPEC-006**: Flagship Hardware Product Patents
 - **PO-PAT-CIM-001** – **PO-PAT-CIM-003**: Companion Intelligence Mesh Patents
 - **PO-PAT-CRE-001** – **PO-PAT-CRE-003**: Cognitive Reasoning Engine Patents
+- **PO-PAT-DNA-001** – **PO-PAT-DNA-003**: Cognitive DNA Lifelong Behavioral Genome Patents
