@@ -11,7 +11,7 @@
 - [PO-0001 — Project One Manifesto](./foundation/PO-0001_Project_One_Manifesto.md)
 - [PO-0002 — Vision 2035 & Multi-Decade Roadmap](./foundation/PO-0002_Vision_2035.md)
 
-## 🏛️ 01 — ENTERPRISE ARCHITECTURE SPRINT (PO-0100 – PO-0109)
+## 🕸️ 01 — COMPANION INTELLIGENCE MESH & ARCHITECTURE SPRINT (PO-0100 – PO-0110)
 - [PO-0100 — Enterprise Architecture Specification](./architecture/PO-0100_Enterprise_Architecture.md)
 - [PO-0101 — Companion Cognitive Architecture Specification](./architecture/PO-0101_Companion_Cognitive_Architecture.md)
 - [PO-0102 — Project One Brain Specification](./architecture/PO-0102_Project_One_Brain.md)
@@ -22,6 +22,7 @@
 - [PO-0107 — Identity Platform & RBAC Specification](./architecture/PO-0107_Identity_Platform.md)
 - [PO-0108 — Cloud Platform Specification](./architecture/PO-0108_Cloud_Platform.md)
 - [PO-0109 — Scalability Strategy Specification](./architecture/PO-0109_Scalability_Strategy.md)
+- [PO-0110 — Companion Intelligence Mesh (CIM) Specification (ACR-0001 Master Pillar)](./architecture/PO-0110_Companion_Intelligence_Mesh.md)
 
 ## 🔌 02 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
 - [RFC-0001 through RFC-0015 (PDP 1.0 Wire Protocol Suite)](./protocols/RFC-0001-PDP-Overview.md)
@@ -41,10 +42,11 @@
 - [PO-0009 — Vision Device Summary](./hardware/PO-0009_Vision_Device.md)
 - [PO-0010 — Smart Bed Summary](./hardware/PO-0010_Smart_Bed.md)
 
-## 🔒 06 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL & SPEC)
+## 🔒 06 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC & CIM)
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
 - **PO-PAT-PDL-001** – **PO-PAT-PDL-011**: PDL 1.0 Language Standard Patents
 - **PO-PAT-HAL-001** – **PO-PAT-HAL-011**: HAL 1.0 Hardware Abstraction Patents
 - **PO-PAT-SPEC-001** – **PO-PAT-SPEC-006**: Flagship Hardware Product Patents
+- **PO-PAT-CIM-001** – **PO-PAT-CIM-003**: Companion Intelligence Mesh Patents
