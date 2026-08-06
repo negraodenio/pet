@@ -288,6 +288,14 @@ export type Database = {
           started_at: string | null;
           ended_at: string | null;
           created_at: string;
+          source: string;
+          category: string;
+          title: string | null;
+          description: string | null;
+          location: string | null;
+          observers: Json;
+          related_events: Json;
+          created_by: string | null;
         };
         Insert: {
           id?: string;
@@ -323,6 +331,14 @@ export type Database = {
           started_at?: string | null;
           ended_at?: string | null;
           created_at?: string;
+          source?: string;
+          category?: string;
+          title?: string | null;
+          description?: string | null;
+          location?: string | null;
+          observers?: Json;
+          related_events?: Json;
+          created_by?: string | null;
         };
         Update: {
           severity?: "info" | "warning" | "critical";
@@ -333,6 +349,13 @@ export type Database = {
           recommended_action?: string | null;
           ai_resolved?: boolean;
           ended_at?: string | null;
+          source?: string;
+          category?: string;
+          title?: string | null;
+          description?: string | null;
+          location?: string | null;
+          observers?: Json;
+          related_events?: Json;
         };
         Relationships: [
           {
