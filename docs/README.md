@@ -11,14 +11,17 @@
 - [PO-0001 — Project One Manifesto](./foundation/PO-0001_Project_One_Manifesto.md)
 - [PO-0002 — Vision 2035 & Multi-Decade Roadmap](./foundation/PO-0002_Vision_2035.md)
 
-## 🌟 01 — LIVING COMPANION MODEL, AI REASONING & GUARDIAN SUITE
+## 🎨 01 — DOMAIN-DRIVEN EXPERIENCE (DDX) & UX (PO-0160)
+- [PO-0160 — Domain-Driven Experience (DDX) Specification (9 Business Domains Navigation)](./ux/PO-0160_Domain_Driven_Experience.md)
+
+## 🌟 02 — LIVING COMPANION MODEL, AI REASONING & GUARDIAN SUITE
 - [PO-0140 — Living Companion Model (LCM) Specification (Apex Abstraction Layer)](./ai/PO-0140_Living_Companion_Model.md)
 - [PO-0150 — Guardian Intelligence Engine (GIE) Specification (Human-Centered AI)](./ai/PO-0150_Guardian_Intelligence_Engine.md)
 - [PO-0130 — Cognitive DNA Specification (Lifelong Behavioral Genome)](./ai/PO-0130_Cognitive_DNA.md)
 - [PO-0120 — Cognitive Reasoning Engine (CRE) Specification](./ai/PO-0120_Cognitive_Reasoning_Engine.md)
 - [PO-0004 — AI Brain Specification](./ai/PO-0004_AI_Brain.md)
 
-## 🕸️ 02 — COMPANION INTELLIGENCE MESH & ARCHITECTURE SPRINT (PO-0100 – PO-0110)
+## 🕸️ 03 — COMPANION INTELLIGENCE MESH & ARCHITECTURE SPRINT (PO-0100 – PO-0110)
 - [PO-0100 — Enterprise Architecture Specification](./architecture/PO-0100_Enterprise_Architecture.md)
 - [PO-0101 — Companion Cognitive Architecture Specification](./architecture/PO-0101_Companion_Cognitive_Architecture.md)
 - [PO-0102 — Project One Brain Specification](./architecture/PO-0102_Project_One_Brain.md)
@@ -31,21 +34,21 @@
 - [PO-0109 — Scalability Strategy Specification](./architecture/PO-0109_Scalability_Strategy.md)
 - [PO-0110 — Companion Intelligence Mesh (CIM) Specification (ACR-0001 Master Pillar)](./architecture/PO-0110_Companion_Intelligence_Mesh.md)
 
-## 🔌 03 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
+## 🔌 04 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
 - [RFC-0001 through RFC-0015 (PDP 1.0 Wire Protocol Suite)](./protocols/RFC-0001-PDP-Overview.md)
 
-## 📋 04 — PET DESCRIPTION LANGUAGE (PDL 1.0) RFC SUITE (RFC-0020 – RFC-0030)
+## 📋 05 — PET DESCRIPTION LANGUAGE (PDL 1.0) RFC SUITE (RFC-0020 – RFC-0030)
 - [RFC-0020 through RFC-0030 (PDL 1.0 Language Standard Suite)](./protocols/RFC-0020-PDL-Overview.md)
 
-## 🛠️ 05 — HARDWARE ABSTRACTION LAYER (HAL 1.0) RFC SUITE (RFC-0040 – RFC-0050)
+## 🛠️ 06 — HARDWARE ABSTRACTION LAYER (HAL 1.0) RFC SUITE (RFC-0040 – RFC-0050)
 - [RFC-0040 through RFC-0050 (HAL 1.0 Hardware Abstraction Suite)](./hardware/RFC-0040-HAL-Overview.md)
 
-## 📱 06 — FLAGSHIP HARDWARE PRODUCTS
+## 📱 07 — FLAGSHIP HARDWARE PRODUCTS
 - [SPEC-0001 — AI Station Enterprise Specification (Flagship Hub)](./hardware/SPEC-0001-AI-Station.md)
 - [SPEC-0002 — Vision Device Enterprise Specification (4K Cognitive Sensor)](./hardware/SPEC-0002-Vision-Device.md)
 - [SPEC-0003 — Smart Bed Enterprise Specification (BCG Health Platform)](./hardware/SPEC-0003-Smart-Bed.md)
 
-## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM, CRE, DNA, LCM & GIE)
+## 🔒 08 — PATENT CANDIDATES PORTFOLIO
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
@@ -57,3 +60,4 @@
 - **PO-PAT-DNA-001** – **PO-PAT-DNA-003**: Cognitive DNA Lifelong Behavioral Genome Patents
 - **PO-PAT-LCM-001** – **PO-PAT-LCM-003**: Living Companion Model Apex Abstraction Patents
 - **PO-PAT-GIE-001** – **PO-PAT-GIE-003**: Guardian Intelligence Engine Human-Centered AI Patents
+- **PO-PAT-DDX-001** – **PO-PAT-DDX-002**: Domain-Driven Experience UX Architecture Patents

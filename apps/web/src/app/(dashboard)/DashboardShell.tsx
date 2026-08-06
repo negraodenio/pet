@@ -9,11 +9,11 @@ import {
   Home,
   Heart,
   Dog,
-  Clock,
+  Brain,
   LayoutGrid,
-  MessageSquare,
-  Bell,
   Cpu,
+  Stethoscope,
+  Users,
   Settings,
   LogOut,
   Menu,
@@ -25,8 +25,17 @@ import {
 import { useState } from "react";
 
 /* =========================================================================
-   COMPAWION OS v2.0 — Apple-Level Navigation (Human Centric)
-   Motto: "We are not building a product. We are building peace of mind for millions of pet owners."
+   PROJECT ONE (PO-0160) — Domain-Driven Experience (DDX) Navigation
+   Nine Core Business Domains:
+   1. 🏠 Home          (/dashboard)
+   2. 🐾 Companion     (/dashboard/pets)
+   3. 🧠 Intelligence  (/dashboard/assistant)
+   4. ❤️ Health        (/dashboard/health)
+   5. 🏡 Home Spaces   (/dashboard/cameras)
+   6. 🔌 Devices       (/dashboard/devices)
+   7. 👨‍⚕️ Veterinary    (/dashboard/veterinary)
+   8. 👨‍👩‍👧 Family        (/dashboard/family)
+   9. ⚙️ Platform      (/dashboard/settings)
    ========================================================================= */
 
 interface DashboardShellProps {
@@ -47,14 +56,14 @@ interface DashboardShellProps {
 
 const navigation = [
   { name: "Home", href: "/dashboard", icon: Home },
-  { name: "My Pets", href: "/dashboard/pets", icon: Dog },
-  { name: "Today's Activities", href: "/dashboard/events", icon: Clock },
+  { name: "Companion", href: "/dashboard/pets", icon: Dog },
+  { name: "Intelligence", href: "/dashboard/assistant", icon: Brain },
   { name: "Health", href: "/dashboard/health", icon: Heart },
-  { name: "Rooms", href: "/dashboard/cameras", icon: LayoutGrid },
-  { name: "AI Assistant", href: "/dashboard/assistant", icon: MessageSquare },
-  { name: "Important Alerts", href: "/dashboard/notifications", icon: Bell },
-  { name: "Device Hub", href: "/dashboard/devices", icon: Cpu },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { name: "Home Spaces", href: "/dashboard/cameras", icon: LayoutGrid },
+  { name: "Devices", href: "/dashboard/devices", icon: Cpu },
+  { name: "Veterinary", href: "/dashboard/veterinary", icon: Stethoscope },
+  { name: "Family", href: "/dashboard/family", icon: Users },
+  { name: "Platform", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function DashboardShell({
@@ -101,10 +110,10 @@ export function DashboardShell({
             </div>
             <div>
               <span className="text-base font-extrabold tracking-tight text-white block leading-none">
-                Compawion
+                Project One
               </span>
               <span className="text-[10px] text-text-muted font-medium mt-1 block">
-                Peace of Mind OS
+                Companion Intelligence OS
               </span>
             </div>
           </Link>
@@ -124,13 +133,13 @@ export function DashboardShell({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
-              <span className="text-xs font-bold text-emerald-300">All Pets Safe</span>
+              <span className="text-xs font-bold text-emerald-300">All Companions Safe</span>
             </div>
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
           </div>
         </div>
 
-        {/* Human Centric Navigation */}
+        {/* Domain Driven Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
           {navigation.map((item) => {
             const active = isActive(item.href);
@@ -149,7 +158,7 @@ export function DashboardShell({
               >
                 <item.icon className={cn("h-4 w-4 shrink-0", active ? "text-indigo-400" : "text-text-muted")} />
                 <span className="flex-1 truncate">{item.name}</span>
-                {item.name === "AI Assistant" && (
+                {item.name === "Intelligence" && (
                   <Sparkles className="h-3.5 w-3.5 text-purple-400" />
                 )}
               </Link>
@@ -157,12 +166,12 @@ export function DashboardShell({
           })}
         </nav>
 
-        {/* Registered Pets Switcher */}
+        {/* Registered Companions Switcher */}
         {pets.length > 0 && (
           <div className="px-4 py-3 border-t border-border/50">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                My Pets
+                Companions
               </span>
               <span className="text-[10px] font-mono text-emerald-400">Everything OK</span>
             </div>
@@ -226,7 +235,7 @@ export function DashboardShell({
           <div className="flex items-center gap-2 mx-auto">
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
             <span className="text-sm font-extrabold tracking-tight text-white">
-              Compawion
+              Project One
             </span>
           </div>
           <div className="w-9" />
