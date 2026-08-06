@@ -24,21 +24,7 @@
 - [PO-0109 — Scalability Strategy Specification](./architecture/PO-0109_Scalability_Strategy.md)
 
 ## 🔌 02 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
-- [RFC-0001 — PDP Overview & Scope](./protocols/RFC-0001-PDP-Overview.md)
-- [RFC-0002 — PDP Architecture & Stack Layering](./protocols/RFC-0002-PDP-Architecture.md)
-- [RFC-0003 — PDP Discovery Specification](./protocols/RFC-0003-PDP-Discovery.md)
-- [RFC-0004 — PDP Secure Pairing Specification (<2 min Flow)](./protocols/RFC-0004-PDP-Pairing.md)
-- [RFC-0005 — PDP Authentication Specification](./protocols/RFC-0005-PDP-Authentication.md)
-- [RFC-0006 — PDP Encryption & Replay Protection](./protocols/RFC-0006-PDP-Encryption.md)
-- [RFC-0007 — PDP Semantic Events Specification](./protocols/RFC-0007-PDP-Events.md)
-- [RFC-0008 — PDP Actions & Interventions Specification](./protocols/RFC-0008-PDP-Actions.md)
-- [RFC-0009 — PDP Telemetry & Diagnostics Specification](./protocols/RFC-0009-PDP-Telemetry.md)
-- [RFC-0010 — PDP Enterprise OTA Specification](./protocols/RFC-0010-PDP-OTA.md)
-- [RFC-0011 — PDP Device Lifecycle Specification](./protocols/RFC-0011-PDP-Device-Lifecycle.md)
-- [RFC-0012 — PDP Versioning & Extensibility Specification](./protocols/RFC-0012-PDP-Versioning.md)
-- [RFC-0013 — PDP Compatibility & Translation Specification](./protocols/RFC-0013-PDP-Compatibility.md)
-- [RFC-0014 — PDP Hardware Security & Trust Specification](./protocols/RFC-0014-PDP-Security.md)
-- [RFC-0015 — "Works with Project One" Certification Specification](./protocols/RFC-0015-PDP-Certification.md)
+- [RFC-0001 through RFC-0015 (PDP 1.0 Wire Protocol Suite)](./protocols/RFC-0001-PDP-Overview.md)
 
 ## 📋 03 — PET DESCRIPTION LANGUAGE (PDL 1.0) RFC SUITE (RFC-0020 – RFC-0030)
 - [RFC-0020 through RFC-0030 (PDL 1.0 Language Standard Suite)](./protocols/RFC-0020-PDL-Overview.md)
@@ -48,9 +34,10 @@
 
 ## 📱 05 — FLAGSHIP HARDWARE PRODUCTS
 - [SPEC-0001 — AI Station Enterprise Specification (Flagship Hub)](./hardware/SPEC-0001-AI-Station.md)
+- [SPEC-0002 — Vision Device Enterprise Specification (4K Cognitive Sensor)](./hardware/SPEC-0002-Vision-Device.md)
 - [PO-0007 — Universal Device Hub](./hardware/PO-0007_Device_Hub.md)
 - [PO-0008 — AI Station Ambient Display Summary](./hardware/PO-0008_AI_Station_Tablet.md)
-- [PO-0009 — Vision Device (4K AI Optical Sensor)](./hardware/PO-0009_Vision_Device.md)
+- [PO-0009 — Vision Device Summary](./hardware/PO-0009_Vision_Device.md)
 - [PO-0010 — Smart Bed (BCG Vital Sensor Platform)](./hardware/PO-0010_Smart_Bed.md)
 
 ## 🔒 06 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL & SPEC)
@@ -59,4 +46,4 @@
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
 - **PO-PAT-PDL-001** – **PO-PAT-PDL-011**: PDL 1.0 Language Standard Patents
 - **PO-PAT-HAL-001** – **PO-PAT-HAL-011**: HAL 1.0 Hardware Abstraction Patents
-- **PO-PAT-SPEC-001** – **PO-PAT-SPEC-002**: AI Station Flagship Hardware Patents
+- **PO-PAT-SPEC-001** – **PO-PAT-SPEC-004**: Flagship Hardware Product Patents
