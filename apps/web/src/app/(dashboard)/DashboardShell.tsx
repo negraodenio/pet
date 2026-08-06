@@ -56,7 +56,7 @@ interface DashboardShellProps {
 
 const navigation = [
   { name: "Home", href: "/dashboard", icon: Home },
-  { name: "Companion", href: "/dashboard/pets", icon: Dog },
+  { name: "Companion", href: "/dashboard/companion", icon: Dog },
   { name: "Intelligence", href: "/dashboard/assistant", icon: Brain },
   { name: "Health", href: "/dashboard/health", icon: Heart },
   { name: "Home Spaces", href: "/dashboard/cameras", icon: LayoutGrid },
@@ -179,7 +179,7 @@ export function DashboardShell({
               {pets.map((pet) => (
                 <Link
                   key={pet.id}
-                  href={`/dashboard/pets/${pet.id}`}
+                  href={`/dashboard/companion/${pet.id}`}
                   onClick={() => setSidebarOpen(false)}
                   className={cn(
                     "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium",
