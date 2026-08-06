@@ -40,14 +40,27 @@
 - [RFC-0014 — PDP Hardware Security & Trust Specification](./protocols/RFC-0014-PDP-Security.md)
 - [RFC-0015 — "Works with Project One" Certification Specification](./protocols/RFC-0015-PDP-Certification.md)
 
-## 🏠 03 — HARDWARE ECOSYSTEM
+## 📋 03 — PET DESCRIPTION LANGUAGE (PDL 1.0) RFC SUITE (RFC-0020 – RFC-0030)
+- [RFC-0020 — PDL Overview & Scope](./protocols/RFC-0020-PDL-Overview.md)
+- [RFC-0021 — PDL Core Syntax & Format Specification (JSON/YAML/CBOR)](./protocols/RFC-0021-PDL-Core-Specification.md)
+- [RFC-0022 — PDL Device Capability Inheritance Specification](./protocols/RFC-0022-PDL-Device-Capabilities.md)
+- [RFC-0023 — PDL Sensors Descriptor Specification](./protocols/RFC-0023-PDL-Sensors.md)
+- [RFC-0024 — PDL Actions & Actuators Specification](./protocols/RFC-0024-PDL-Actions.md)
+- [RFC-0025 — PDL Event Capabilities Specification](./protocols/RFC-0025-PDL-Events.md)
+- [RFC-0026 — PDL Media Capabilities Specification](./protocols/RFC-0026-PDL-Media.md)
+- [RFC-0027 — PDL AI Capabilities Specification](./protocols/RFC-0027-PDL-AI-Capabilities.md)
+- [RFC-0028 — PDL Extensions & Custom Vendors Specification](./protocols/RFC-0028-PDL-Extensions.md)
+- [RFC-0029 — PDL Versioning & 20-Year Compatibility Specification](./protocols/RFC-0029-PDL-Versioning.md)
+- [RFC-0030 — "PDL Certified" Compliance & Validation Specification](./protocols/RFC-0030-PDL-Certification.md)
+
+## 🏠 04 — HARDWARE ECOSYSTEM
 - [PO-0007 — Universal Device Hub](./hardware/PO-0007_Device_Hub.md)
 - [PO-0008 — AI Station (Ambient Tablet)](./hardware/PO-0008_AI_Station_Tablet.md)
 - [PO-0009 — Vision Device (4K AI Optical Sensor)](./hardware/PO-0009_Vision_Device.md)
 - [PO-0010 — Smart Bed (BCG Vital Sensor Platform)](./hardware/PO-0010_Smart_Bed.md)
 
-## 🔒 04 — PATENT CANDIDATES PORTFOLIO (PO-PAT & PO-PAT-PDP)
-- **PO-PAT-000**: *Multi-Layer Event-Driven Hardware Abstraction Architecture*
-- **PO-PAT-001**: *Multi-Modal Behavioral Anomaly Detection & Autonomous Acoustic Intervention*
+## 🔒 05 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PO-PAT-PDP & PO-PAT-PDL)
+- **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
+- **PO-PAT-PDL-001** – **PO-PAT-PDL-011**: PDL 1.0 Language Standard Patents
