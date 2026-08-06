@@ -503,6 +503,76 @@ export type Database = {
           }
         ];
       };
+      cognitive_reasoning_results: {
+        Row: {
+          id: string;
+          pet_id: string;
+          org_id: string;
+          generated_at: string;
+          reasoning_type: string;
+          confidence: number;
+          priority: string;
+          title: string;
+          summary: string;
+          evidence: Json;
+          recommendation: string | null;
+          predicted_outcome: string | null;
+          related_events: Json;
+          expires_at: string | null;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          pet_id: string;
+          org_id: string;
+          generated_at?: string;
+          reasoning_type?: string;
+          confidence?: number;
+          priority?: string;
+          title: string;
+          summary: string;
+          evidence?: Json;
+          recommendation?: string | null;
+          predicted_outcome?: string | null;
+          related_events?: Json;
+          expires_at?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          reasoning_type?: string;
+          confidence?: number;
+          priority?: string;
+          title?: string;
+          summary?: string;
+          evidence?: Json;
+          recommendation?: string | null;
+          predicted_outcome?: string | null;
+          related_events?: Json;
+          expires_at?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cognitive_reasoning_results_pet_id_fkey";
+            columns: ["pet_id"];
+            isOneToOne: false;
+            referencedRelation: "pets";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "cognitive_reasoning_results_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       timeline_entries: {
         Row: {
           id: string;

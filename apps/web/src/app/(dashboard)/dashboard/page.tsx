@@ -1,25 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
 import { TimelineService } from "@/lib/services/TimelineService";
+import { CognitiveReasoningEngine } from "@/lib/services/CognitiveReasoningEngine";
+import { ExplainabilityPanel } from "@/features/intelligence/ExplainabilityPanel";
 import { Avatar } from "@/shared/components/ui/Avatar";
 import { Badge } from "@/shared/components/ui/Badge";
 import {
-  Heart,
-  Moon,
-  Droplets,
-  Utensils,
-  Activity,
-  Smile,
-  Video,
   Sparkles,
   ChevronRight,
   ShieldCheck,
-  CheckCircle2,
-  Home,
-  MessageSquare,
   Clock,
 } from "lucide-react";
 import Link from "next/link";
-import { formatEventType, severityColor, formatConfidence } from "@/lib/utils";
+import { formatEventType, formatConfidence } from "@/lib/utils";
 
 export const metadata = {
   title: "Home",
@@ -28,10 +20,11 @@ export const metadata = {
 export default async function DashboardHomePage() {
   const supabase = await createClient();
 
-  const [petsResult, devicesResult, timelineEvents] = await Promise.all([
+  const [petsResult, devicesResult, timelineEvents, topInsights] = await Promise.all([
     supabase.from("pets").select("*").order("name"),
     supabase.from("devices").select("*").order("name"),
     TimelineService.getTimeline(15).catch(() => []),
+    CognitiveReasoningEngine.getTopHouseholdInsights(3).catch(() => []),
   ]);
 
   const dbPets = petsResult.data ?? [];
@@ -59,7 +52,6 @@ export default async function DashboardHomePage() {
       {/* Hero Guardian Status Overview */}
       <div className="glass-panel p-6 sm:p-8 border-indigo-500/30 relative overflow-hidden">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
-          {/* Left: Active Companion Banner */}
           <div className="flex items-center gap-5">
             <Avatar src={activePet.avatar_url} alt={activePet.name} size="xl" />
             <div>
@@ -85,7 +77,6 @@ export default async function DashboardHomePage() {
             </div>
           </div>
 
-          {/* Right: Quick Action Cards */}
           <div className="flex items-center gap-3 w-full lg:w-auto">
             <Link
               href="/dashboard/companion"
@@ -98,6 +89,9 @@ export default async function DashboardHomePage() {
           </div>
         </div>
       </div>
+
+      {/* CRE Top Household Live Insights */}
+      {topInsights.length > 0 && <ExplainabilityPanel insights={topInsights} />}
 
       {/* Real Cognitive Timeline Feed */}
       <div className="glass-panel p-6">
