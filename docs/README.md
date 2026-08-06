@@ -24,25 +24,25 @@
 - [PO-0109 — Scalability Strategy Specification](./architecture/PO-0109_Scalability_Strategy.md)
 - [PO-0110 — Companion Intelligence Mesh (CIM) Specification (ACR-0001 Master Pillar)](./architecture/PO-0110_Companion_Intelligence_Mesh.md)
 
-## 🔌 02 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
+## 🧠 02 — COGNITIVE REASONING ENGINE (CRE) & AI KERNEL (PO-0120)
+- [PO-0120 — Cognitive Reasoning Engine (CRE) Specification](./ai/PO-0120_Cognitive_Reasoning_Engine.md)
+- [PO-0004 — AI Brain Specification](./ai/PO-0004_AI_Brain.md)
+
+## 🔌 03 — PET DEVICE PROTOCOL (PDP 1.0) RFC SUITE (RFC-0001 – RFC-0015)
 - [RFC-0001 through RFC-0015 (PDP 1.0 Wire Protocol Suite)](./protocols/RFC-0001-PDP-Overview.md)
 
-## 📋 03 — PET DESCRIPTION LANGUAGE (PDL 1.0) RFC SUITE (RFC-0020 – RFC-0030)
+## 📋 04 — PET DESCRIPTION LANGUAGE (PDL 1.0) RFC SUITE (RFC-0020 – RFC-0030)
 - [RFC-0020 through RFC-0030 (PDL 1.0 Language Standard Suite)](./protocols/RFC-0020-PDL-Overview.md)
 
-## 🛠️ 04 — HARDWARE ABSTRACTION LAYER (HAL 1.0) RFC SUITE (RFC-0040 – RFC-0050)
+## 🛠️ 05 — HARDWARE ABSTRACTION LAYER (HAL 1.0) RFC SUITE (RFC-0040 – RFC-0050)
 - [RFC-0040 through RFC-0050 (HAL 1.0 Hardware Abstraction Suite)](./hardware/RFC-0040-HAL-Overview.md)
 
-## 📱 05 — FLAGSHIP HARDWARE PRODUCTS
+## 📱 06 — FLAGSHIP HARDWARE PRODUCTS
 - [SPEC-0001 — AI Station Enterprise Specification (Flagship Hub)](./hardware/SPEC-0001-AI-Station.md)
 - [SPEC-0002 — Vision Device Enterprise Specification (4K Cognitive Sensor)](./hardware/SPEC-0002-Vision-Device.md)
 - [SPEC-0003 — Smart Bed Enterprise Specification (BCG Health Platform)](./hardware/SPEC-0003-Smart-Bed.md)
-- [PO-0007 — Universal Device Hub](./hardware/PO-0007_Device_Hub.md)
-- [PO-0008 — AI Station Ambient Display Summary](./hardware/PO-0008_AI_Station_Tablet.md)
-- [PO-0009 — Vision Device Summary](./hardware/PO-0009_Vision_Device.md)
-- [PO-0010 — Smart Bed Summary](./hardware/PO-0010_Smart_Bed.md)
 
-## 🔒 06 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC & CIM)
+## 🔒 07 — PATENT CANDIDATES PORTFOLIO (PO-PAT, PDP, PDL, HAL, SPEC, CIM & CRE)
 - **PO-PAT-000** – **PO-PAT-001**: Foundational Architecture Patents
 - **PO-PAT-0101** – **PO-PAT-0109**: Enterprise Architecture Patents
 - **PO-PAT-PDP-001** – **PO-PAT-PDP-015**: PDP 1.0 Protocol Standard Patents
@@ -50,3 +50,4 @@
 - **PO-PAT-HAL-001** – **PO-PAT-HAL-011**: HAL 1.0 Hardware Abstraction Patents
 - **PO-PAT-SPEC-001** – **PO-PAT-SPEC-006**: Flagship Hardware Product Patents
 - **PO-PAT-CIM-001** – **PO-PAT-CIM-003**: Companion Intelligence Mesh Patents
+- **PO-PAT-CRE-001** – **PO-PAT-CRE-003**: Cognitive Reasoning Engine Patents
