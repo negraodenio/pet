@@ -27,7 +27,7 @@ export function ActionFeed({ actions }: { actions: CompanionAction[] }) {
     const res = await rejectActionServer(id);
     if (res.success) {
       setActionList((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, status: "rejected" } : a)),
+        prev.map((a) => (a.id === id ? { ...a, status: "cancelled" } : a)),
       );
     }
   };
@@ -51,9 +51,9 @@ export function ActionFeed({ actions }: { actions: CompanionAction[] }) {
 
       <div className="space-y-3">
         {actionList.map((act) => {
-          const isPendingApproval = act.status === "awaiting_approval";
+          const isPendingApproval = act.status === "pending";
           const isCompleted = act.status === "completed";
-          const isRejected = act.status === "rejected";
+          const isRejected = act.status === "cancelled";
 
           return (
             <div
@@ -109,7 +109,7 @@ export function ActionFeed({ actions }: { actions: CompanionAction[] }) {
                   )}
 
                   {isCompleted && <Badge variant="success">Completed</Badge>}
-                  {isRejected && <Badge variant="danger">Rejected</Badge>}
+                  {isRejected && <Badge variant="danger">Cancelled</Badge>}
                 </div>
               </div>
             </div>

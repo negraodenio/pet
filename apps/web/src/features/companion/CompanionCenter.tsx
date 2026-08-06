@@ -23,21 +23,25 @@ import {
 } from "lucide-react";
 import type { Tables } from "@/lib/supabase/database.types";
 import { formatDistanceToNow } from "date-fns";
+import { useRealtimeLcm } from "@/shared/hooks/useRealtime";
 
 type PetWithProfile = Tables<"pets"> & {
   pet_profiles: Tables<"pet_profiles"> | null;
 };
 type PetEvent = Tables<"pet_events">;
+type LCMState = Tables<"living_companion_models">;
 
 interface CompanionCenterProps {
   initialPets: PetWithProfile[];
   initialEventsMap: Record<string, PetEvent[]>;
+  initialLcmMap: Record<string, LCMState>;
   defaultSelectedId?: string;
 }
 
 export function CompanionCenter({
   initialPets,
   initialEventsMap,
+  initialLcmMap,
   defaultSelectedId,
 }: CompanionCenterProps) {
   const [pets, setPets] = useState(initialPets);
@@ -48,25 +52,21 @@ export function CompanionCenter({
     "overview" | "lcm" | "dna" | "story"
   >("overview");
 
-  // Fallback demo companion if no real pets registered yet
-  const activePet =
-    pets.find((p) => p.id === selectedId) ??
-    pets[0] ?? {
-      id: "demo-thor",
-      org_id: "demo-org",
-      name: "Thor",
-      species: "dog" as const,
-      breed: "Golden Retriever",
-      birth_date: "2022-04-12",
-      weight_kg: 31.5,
-      sex: "neutered_male" as const,
-      avatar_url: null,
-      identity_embeddings: {},
-      preferences: {},
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      pet_profiles: null,
-    };
+  const activePet = pets.find((p) => p.id === selectedId) ?? pets[0];
+  const activeLcm = useRealtimeLcm(
+    activePet?.id ?? null,
+    activePet ? initialLcmMap[activePet.id] ?? null : null,
+  );
+
+  if (!activePet) {
+    return (
+      <div className="glass-panel p-8 text-center space-y-4">
+        <h1 className="text-xl font-bold text-white">No companions registered</h1>
+        <p className="text-sm text-text-muted">Add a companion before viewing its current model or Timeline.</p>
+        <AddPetDialog />
+      </div>
+    );
+  }
 
   const activeEvents = initialEventsMap[activePet.id] ?? [];
   const latestEvent = activeEvents[0] ?? null;
@@ -216,8 +216,7 @@ export function CompanionCenter({
         <div className="space-y-6">
           <LivingCompanionModelCard
             pet={activePet}
-            profile={activePet.pet_profiles}
-            latestEvent={latestEvent}
+            lcm={activeLcm}
             recentEventCount={activeEvents.length}
           />
 
@@ -237,8 +236,7 @@ export function CompanionCenter({
       {activeTab === "lcm" && (
         <LivingCompanionModelCard
           pet={activePet}
-          profile={activePet.pet_profiles}
-          latestEvent={latestEvent}
+          lcm={activeLcm}
           recentEventCount={activeEvents.length}
         />
       )}

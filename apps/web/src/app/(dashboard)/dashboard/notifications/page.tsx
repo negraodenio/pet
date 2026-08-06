@@ -4,38 +4,11 @@ import { Badge } from "@/shared/components/ui/Badge";
 import { Bell, Clock, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { MarkAllReadButton } from "@/features/notifications/components/MarkAllReadButton";
+import { EmptyState } from "@/shared/components/feedback/EmptyState";
 
 export const metadata = {
   title: "Alert Center",
 };
-
-// Fallback demo notifications when database is empty
-const demoNotifications = [
-  {
-    id: "notif-1",
-    title: "Possible Anxiety Event — Action Executed",
-    body: "Lola was pacing near the front door. AI played recorded voice clip. Behavioral response: Calmed within 2 mins.",
-    priority: "medium",
-    read: false,
-    created_at: new Date(Date.now() - 60000 * 20).toISOString(),
-  },
-  {
-    id: "notif-2",
-    title: "Barking Resolution",
-    body: "Thor barked 4 times at front door. AI played soothing ambient music track. Barking stopped.",
-    priority: "medium",
-    read: false,
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-  },
-  {
-    id: "notif-3",
-    title: "Hydration Milestone Reached",
-    body: "Thor reached 100% of his daily recommended water intake (450ml).",
-    priority: "low",
-    read: true,
-    created_at: new Date(Date.now() - 3600000 * 6).toISOString(),
-  },
-];
 
 export default async function NotificationsPage() {
   const supabase = await createClient();
@@ -47,9 +20,7 @@ export default async function NotificationsPage() {
     .limit(50);
 
   const dbNotifications = notifications ?? [];
-  const hasRealNotifications = dbNotifications.length > 0;
-  const notificationList = hasRealNotifications ? dbNotifications : demoNotifications;
-  const unreadCount = notificationList.filter((n) => !n.read).length;
+  const unreadCount = dbNotifications.filter((n) => !n.read).length;
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -72,7 +43,9 @@ export default async function NotificationsPage() {
       {/* Notifications List */}
       <div className="glass-panel overflow-hidden border-indigo-500/20">
         <div className="divide-y divide-border/60">
-          {notificationList.map((notification) => (
+          {dbNotifications.length === 0 ? (
+            <EmptyState icon={<Bell className="h-8 w-8" />} title="No alerts" description="New persisted alerts will appear here." />
+          ) : dbNotifications.map((notification) => (
             <div
               key={notification.id}
               className={`flex items-start gap-4 p-4 transition-colors ${

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { z } from "zod";
 
 /* =========================================================================
    Device Heartbeat API
@@ -19,30 +20,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { device_id, status, firmware_version } = await request.json();
+    const body = z.object({
+      device_id: z.string().uuid(),
+      status: z.enum(["online", "offline", "updating", "error"]).optional(),
+      firmware_version: z.string().min(1).max(100).optional(),
+    }).parse(await request.json());
 
-    if (!device_id) {
-      return NextResponse.json(
-        { error: "device_id is required" },
-        { status: 400 },
-      );
-    }
-
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("devices")
       .update({
         last_heartbeat: new Date().toISOString(),
-        status: status ?? "online",
-        ...(firmware_version ? { firmware_version } : {}),
+        status: body.status ?? "online",
+        ...(body.firmware_version ? { firmware_version: body.firmware_version } : {}),
       })
-      .eq("id", device_id);
+      .eq("id", body.device_id)
+      .select("id")
+      .maybeSingle();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    if (!data) {
+      return NextResponse.json({ error: "Device not found" }, { status: 404 });
+    }
+
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: "Validation failed", details: error.issues }, { status: 400 });
+    }
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

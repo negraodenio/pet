@@ -21,6 +21,15 @@ export function useRealtimeEvents(initialEvents: PetEvent[] = []) {
 
   useEffect(() => {
     const supabase = createClient();
+    const reload = async () => {
+      const { data } = await supabase
+        .from("pet_events")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (data) setEvents(data as PetEvent[]);
+    };
 
     const channel = supabase
       .channel("pet-events-realtime")
@@ -33,10 +42,12 @@ export function useRealtimeEvents(initialEvents: PetEvent[] = []) {
         },
         (payload) => {
           const newEvent = payload.new as PetEvent;
-          setEvents((prev) => [newEvent, ...prev]);
+          setEvents((prev) => [newEvent, ...prev.filter((event) => event.id !== newEvent.id)].slice(0, 100));
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") void reload();
+      });
 
     return () => {
       supabase.removeChannel(channel);
@@ -44,6 +55,50 @@ export function useRealtimeEvents(initialEvents: PetEvent[] = []) {
   }, []);
 
   return events;
+}
+
+type LCMState = Tables<"living_companion_models">;
+
+/** Reloads durable LCM state whenever the Realtime channel reconnects. */
+export function useRealtimeLcm(
+  petId: string | null,
+  initialState: LCMState | null,
+) {
+  const [state, setState] = useState<LCMState | null>(initialState);
+
+  useEffect(() => {
+    if (!petId) return;
+
+    const supabase = createClient();
+    const reload = async () => {
+      const { data } = await supabase
+        .from("living_companion_models")
+        .select("*")
+        .eq("pet_id", petId)
+        .maybeSingle();
+
+      setState(data as LCMState | null);
+    };
+
+    const channel = supabase
+      .channel(`lcm-realtime-${petId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "living_companion_models", filter: `pet_id=eq.${petId}` },
+        () => {
+          void reload();
+        },
+      )
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") void reload();
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [petId]);
+
+  return state;
 }
 
 type Device = Tables<"devices">;

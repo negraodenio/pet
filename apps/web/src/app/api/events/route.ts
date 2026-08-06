@@ -3,6 +3,11 @@ import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
 import type { InsertTables, Enums, Json } from "@/lib/supabase/database.types";
 import { createEventContext } from "@/lib/identity/EventIdentity";
+import { LivingCompanionModelService } from "@/lib/services/LivingCompanionModelService";
+import { CognitiveReasoningEngine, type ReasoningResult } from "@/lib/services/CognitiveReasoningEngine";
+import { ActionEngine } from "@/lib/services/ActionEngine";
+import { toIdempotencyKey } from "@/lib/services/ActionIdempotency";
+import type { TimelineEvent } from "@/lib/services/TimelineService";
 
 /* =========================================================================
    S1-02: Event Ingestion API
@@ -48,6 +53,42 @@ const eventSchema = z.object({
 const batchEventSchema = z.object({
   events: z.array(eventSchema).min(1).max(50),
 });
+
+const ACTION_BY_REASONING_TYPE: Partial<Record<ReasoningResult["reasoning_type"], string>> = {
+  hydration_risk: "ACTIVATE_WATER_ALERT",
+  stress_detection: "PLAY_CALMING_SOUND",
+};
+
+async function processTimelineEvent(event: TimelineEvent): Promise<"processed" | "skipped"> {
+  if (!event.pet_id) return "skipped";
+
+  const lcmResult = await LivingCompanionModelService.computeStateFromEvent(event);
+  if (lcmResult.status !== "updated") return "skipped";
+
+  const reasoningResults = await CognitiveReasoningEngine.analyzeCompanion(event.pet_id);
+  for (const reasoning of reasoningResults) {
+    const actionType = ACTION_BY_REASONING_TYPE[reasoning.reasoning_type];
+    if (!actionType) continue;
+
+    await ActionEngine.dispatchAction({
+      pet_id: event.pet_id,
+      reasoning_id: reasoning.id,
+      action_type: actionType,
+      priority: reasoning.priority as "low" | "medium" | "high" | "critical",
+      causation_id: reasoning.originating_event_id ?? event.id,
+      context: {
+        correlation_id: reasoning.correlation_id ?? event.correlation_id,
+        causation_id: reasoning.originating_event_id ?? event.id,
+        trace_id: reasoning.trace_id ?? event.trace_id,
+        request_id: reasoning.request_id ?? event.request_id,
+        actor_id: "automation",
+      },
+      idempotency_key: toIdempotencyKey(`reasoning:${reasoning.id}:${actionType}`),
+    });
+  }
+
+  return "processed";
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -117,17 +158,35 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from("pet_events")
       .insert(rows)
-      .select("id, event_id, correlation_id, trace_id, request_id, event_type, severity, created_at");
+      .select("*, pets(name, species), devices(name, device_type)");
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    const pipeline = [] as Array<{
+      event_id: string;
+      status: "processed" | "skipped" | "failed";
+    }>;
+
+    for (const event of data ?? []) {
+      try {
+        pipeline.push({
+          event_id: event.id,
+          status: await processTimelineEvent(event as TimelineEvent),
+        });
+      } catch {
+        // Timeline ingestion is durable even if its synchronous derived work fails.
+        pipeline.push({ event_id: event.id, status: "failed" });
+      }
+    }
+
     return NextResponse.json(
       {
         success: true,
-        count: data.length,
+        count: data?.length ?? 0,
         events: data,
+        pipeline,
       },
       { status: 201 },
     );

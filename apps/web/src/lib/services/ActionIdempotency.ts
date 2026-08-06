@@ -83,6 +83,13 @@ export class LeaseExpiredError extends Error {
   }
 }
 
+export class UnsupportedActionError extends Error {
+  constructor(readonly actionType: string) {
+    super(`No plugin supports action ${actionType}.`);
+    this.name = "UnsupportedActionError";
+  }
+}
+
 export function createIdempotencyKey(): IdempotencyKey {
   return `action:${randomUUID()}` as IdempotencyKey;
 }

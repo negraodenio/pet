@@ -24,6 +24,7 @@ import {
   IdempotencyViolationError,
   LeaseExpiredError,
   OwnershipViolationError,
+  UnsupportedActionError,
 } from "@/lib/services/ActionIdempotency";
 
 /* =========================================================================
@@ -44,6 +45,22 @@ const SAFETY_CRITICAL_ACTIONS = [
 ];
 
 const CLAIM_LEASE_MS = 5 * 60 * 1000;
+const PLUGIN_TIMEOUT_MS = 10_000;
+
+export function actionPriorityToTimelineSeverity(
+  priority: string,
+): "info" | "warning" | "critical" {
+  switch (priority) {
+    case "critical":
+      return "critical";
+    case "high":
+      return "warning";
+    case "low":
+    case "medium":
+    default:
+      return "info";
+  }
+}
 
 export class ActionDispatcher {
   private static plugins: DevicePlugin[] = [
@@ -54,13 +71,14 @@ export class ActionDispatcher {
     new MockFeederPlugin(),
   ];
 
-  static findPlugin(actionType: string): DevicePlugin {
+  static findPlugin(actionType: string): DevicePlugin | null {
     const plugin = this.plugins.find((p) => p.supports(actionType));
-    return plugin ?? this.plugins[0];
+    return plugin ?? null;
   }
 
   static async dispatch(action: CompanionAction): Promise<ExecutionResult & { pluginName: string }> {
     const plugin = this.findPlugin(action.action_type);
+    if (!plugin) throw new UnsupportedActionError(action.action_type);
     const context: ActionExecutionContext = {
       action_id: action.id as ActionId,
       idempotency_key: action.idempotency_key as IdempotencyKey,
@@ -71,12 +89,33 @@ export class ActionDispatcher {
       request_id: action.request_id,
       actor_id: action.actor_id,
     };
-    const result = await plugin.execute(action, context);
+    const result = await this.executeWithTimeout(plugin, action, context);
 
     return {
       pluginName: plugin.name,
       ...result,
     };
+  }
+
+  private static async executeWithTimeout(
+    plugin: DevicePlugin,
+    action: CompanionAction,
+    context: ActionExecutionContext,
+  ): Promise<ExecutionResult> {
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+
+    try {
+      return await Promise.race([
+        plugin.execute(action, context),
+        new Promise<never>((_, reject) => {
+          timeout = setTimeout(() => {
+            reject(new Error(`Plugin execution timed out after ${PLUGIN_TIMEOUT_MS}ms.`));
+          }, PLUGIN_TIMEOUT_MS);
+        }),
+      ]);
+    } finally {
+      if (timeout) clearTimeout(timeout);
+    }
   }
 }
 
@@ -246,7 +285,7 @@ export class ActionEngine {
         event_type: "unusual",
         source: "automation",
         category: "reasoning",
-        severity: action.priority as "info" | "warning" | "critical",
+        severity: actionPriorityToTimelineSeverity(claimedAction.priority),
         confidence: 0.99,
         title: `CAE Action Executed: ${action.action_type}`,
         description: `Executed via ${dispatchResult.pluginName} (${dispatchResult.executionTimeMs}ms).`,

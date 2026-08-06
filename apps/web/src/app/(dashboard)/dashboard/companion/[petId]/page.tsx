@@ -10,6 +10,7 @@ type PetWithProfile = Tables<"pets"> & {
   pet_profiles: Tables<"pet_profiles"> | null;
 };
 type PetEvent = Tables<"pet_events">;
+type LCMState = Tables<"living_companion_models">;
 
 interface CompanionPetDetailPageProps {
   params: Promise<{ petId: string }>;
@@ -29,6 +30,7 @@ export default async function CompanionPetDetailPage({
   const companionList = (pets ?? []) as PetWithProfile[];
 
   const eventsMap: Record<string, PetEvent[]> = {};
+  const lcmMap: Record<string, LCMState> = {};
 
   if (companionList.length > 0) {
     const petIds = companionList.map((p) => p.id);
@@ -47,12 +49,22 @@ export default async function CompanionPetDetailPage({
         }
       }
     }
+
+    const { data: lcmStates } = await supabase
+      .from("living_companion_models")
+      .select("*")
+      .in("pet_id", petIds);
+
+    for (const state of lcmStates ?? []) {
+      lcmMap[state.pet_id] = state;
+    }
   }
 
   return (
     <CompanionCenter
       initialPets={companionList}
       initialEventsMap={eventsMap}
+      initialLcmMap={lcmMap}
       defaultSelectedId={petId}
     />
   );

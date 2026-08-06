@@ -22,22 +22,15 @@ export const metadata = {
 export default async function DashboardHomePage() {
   const supabase = await createClient();
 
-  const [petsResult, devicesResult, timelineEvents, topInsights, recentActions] = await Promise.all([
+  const [petsResult, timelineEvents, topInsights, recentActions] = await Promise.all([
     supabase.from("pets").select("*").order("name"),
-    supabase.from("devices").select("*").order("name"),
     TimelineService.getTimeline(15).catch(() => []),
     CognitiveReasoningEngine.getTopHouseholdInsights(3).catch(() => []),
     ActionEngine.getRecentExecutedActions(5).catch(() => []),
   ]);
 
   const dbPets = petsResult.data ?? [];
-  const activePet = dbPets[0] ?? {
-    id: "lola",
-    name: "Lola",
-    species: "dog",
-    breed: "Golden Retriever",
-    avatar_url: null,
-  };
+  const activePet = dbPets[0] ?? null;
 
   return (
     <div className="space-y-8 animate-fade-in-up">
@@ -56,28 +49,27 @@ export default async function DashboardHomePage() {
       <div className="glass-panel p-6 sm:p-8 border-indigo-500/30 relative overflow-hidden">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-5">
-            <Avatar src={activePet.avatar_url} alt={activePet.name} size="xl" />
-            <div>
-              <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-extrabold text-white">
-                  {activePet.name} is safe and resting
-                </h2>
-                <Badge variant="success" dot pulse>
-                  Optimal Health Index
-                </Badge>
+            {activePet ? (
+              <>
+                <Avatar src={activePet.avatar_url} alt={activePet.name} size="xl" />
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-extrabold text-white">{activePet.name}</h2>
+                    <Badge variant="primary">Registered companion</Badge>
+                  </div>
+                  <p className="text-xs text-text-secondary mt-1 font-mono">
+                    {activePet.breed ?? activePet.species}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div>
+                <h2 className="text-2xl font-extrabold text-white">No companion registered</h2>
+                <p className="text-xs text-text-secondary mt-1 font-mono">
+                  Add a companion before monitoring Timeline activity.
+                </p>
               </div>
-              <p className="text-xs text-text-secondary mt-1 font-mono">
-                {activePet.breed ?? "Companion"} • Multi-Observer Cognitive Engine
-                Active
-              </p>
-              <div className="flex items-center gap-4 mt-3 text-xs text-text-muted font-mono">
-                <span className="flex items-center gap-1.5 text-emerald-400">
-                  <ShieldCheck className="h-4 w-4" /> 100% Peace of Mind
-                </span>
-                <span>•</span>
-                <span>Living Room Node Online</span>
-              </div>
-            </div>
+            )}
           </div>
 
           <div className="flex items-center gap-3 w-full lg:w-auto">
