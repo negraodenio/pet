@@ -1,0 +1,958 @@
+I’m inspecting the implemented PR-011 through PR-014 code, deployment configuration, database policies, tests, and runtime boundaries before making any approval judgment. The review will distinguish verified controls from assumptions and will include concrete file references for every material finding.
+
+The implementation review has already surfaced architectural claims that are not enforced by the code: the “append-only” timeline has no database immutability controls, LCM updates are last-writer-wins, and CAE executes synchronously without a claim/idempotency protocol. I’m now validating the surrounding auth, RLS, migration, build, and operational evidence so the final decision is based on reproducible defects rather than design criticism alone.
+
+The verification evidence is materially below Alpha standard: the repository has no test files or CI workflow, root validation commands fail because declared workspace tools are missing, and the database policies do not grant event/health ingestion while granting overly broad mutation rights in several places. The remaining review is being consolidated into severity-ranked findings, explicit answers to the ten challenge questions, and a gated backlog rather than a redesign proposal.
+
+Technical Due Diligence Report
+Decision: DO NOT APPROVE
+
+Project One is not ready for Alpha deployment involving real pets, physical devices, autonomous actions, pilot customers, or investor-facing production claims.
+
+The implemented code demonstrates the intended domain separation, but the operational guarantees described by the architecture are not implemented. The system currently behaves like a server-rendered prototype with Supabase persistence, not a production event-sourced cognitive platform.
+
+The most serious gaps are:
+
+No reliable event-processing pipeline between Timeline, LCM, CRE, and CAE.
+No idempotency or exactly-once-effect protection for actions.
+No concurrency control for LCM state.
+No immutable enforcement for the Timeline.
+No device authentication model.
+Incomplete and inconsistent RLS policies.
+No retry, timeout, queue, circuit breaker, backpressure, or dead-letter mechanisms.
+Hardware plugins are mocks and unsupported actions silently fall back to TabletPlugin.
+No tests or CI/CD validation.
+Declared root validation commands do not run because turbo and prettier are missing.
+Executive Assessment
+Area	Assessment
+Conceptual architecture	Reasonable separation of concerns
+Event sourcing correctness	Not implemented
+Multi-tenancy	Incomplete and unsafe
+Authentication	Basic user session authentication exists
+Authorization	Insufficient role enforcement
+Timeline durability	Basic append operation only
+LCM consistency	Vulnerable to lost updates and stale events
+CRE correctness	Produces duplicate and partly fabricated conclusions
+CAE reliability	Unsafe for physical execution
+Plugin isolation	Interface exists; runtime isolation does not
+Offline/edge support	Not implemented in this repository
+Supabase scalability	No load, query, Realtime, or connection-pool evidence
+Observability	Minimal console logging; no production telemetry
+Testing	No test suite found
+CI/CD	No working root validation pipeline found
+Alpha readiness	Fail
+Severity-Ranked Findings
+Probability and impact use:
+
+High: expected or likely under normal growth or concurrency
+Medium: plausible under specific conditions
+Low: requires unusual conditions
+Difficulty estimates:
+
+Low: less than one engineering week
+Medium: one to three engineering weeks
+High: more than three engineering weeks or cross-system coordination
+Critical Findings
+C-01: CAE has no idempotency or execution claim protocol
+Evidence: ActionEngine.ts:97-111, ActionEngine.ts:117-162
+
+dispatchAction() inserts an action and immediately executes it. executeAction() does not atomically claim the action, check whether it has already executed, or enforce a unique execution key.
+
+Two concurrent requests, retries, duplicate HTTP requests, or a server retry can execute the same action multiple times.
+
+This is dangerous for:
+
+Feeding
+Opening devices
+Notifications
+Emergency protocols
+Veterinary calls
+Any future actuator
+Attribute	Assessment
+Classification	Critical
+Probability	High
+Impact	Critical
+Difficulty to fix	High
+Business risk	Physical harm, duplicate feeding, customer trust loss, liability
+Technical risk	At-least-once delivery with no effect deduplication
+Required control: A durable action idempotency key, unique constraint, transactional state machine, atomic claim, execution attempt records, and explicit handling for unknown execution outcomes.
+
+C-02: LCM updates are last-writer-wins and can regress state
+Evidence: LivingCompanionModelService.ts:87-155, 160-183
+
+The service reads current state, calculates updates in memory, then performs an upsert. There is no:
+
+Row lock
+Compare-and-swap version
+Event sequence number
+Monotonic event timestamp check
+Optimistic concurrency condition
+Reconciliation process
+Two events processed concurrently can overwrite each other. An older event can arrive after a newer event and move the LCM backward.
+
+Example:
+
+Event A reports sleeping.
+Event B reports barking.
+Both read the same state.
+Event A writes last and erases the barking state.
+Attribute	Assessment
+Classification	Critical
+Probability	High
+Impact	High
+Difficulty to fix	High
+Business risk	Incorrect health and behavior status; missed alerts
+Technical risk	Non-deterministic materialized state
+C-03: The Timeline is not actually immutable
+Evidence: 00001_initial_schema.sql:168-184, 00001_initial_schema.sql:577-583
+
+The schema describes pet_events as append-only, but there is no database trigger preventing:
+
+Updates
+Deletes
+Modification of event timestamps
+Modification of source identity
+Modification of event payloads
+RLS only provides a select policy for pet_events; it does not enforce immutability.
+
+The current API inserts events but does not establish an immutable event contract.
+
+Attribute	Assessment
+Classification	Critical
+Probability	Medium
+Impact	Critical
+Difficulty to fix	Medium
+Business risk	Loss of auditability, unreliable medical history, legal and trust exposure
+Technical risk	Event sourcing invariants are false
+C-04: Device authentication is absent
+Evidence: api/devices/heartbeat/route.ts:10-38, api/events/route.ts:51-101
+
+Device ingestion requires a Supabase user session. There is no device credential, certificate, signed request, key rotation, nonce, replay protection, or device-to-organization binding.
+
+The architecture claims hardware devices and edge nodes, but the implemented APIs authenticate guardians, not devices.
+
+A compromised user session could submit arbitrary events or update device heartbeat and firmware metadata. Actual devices cannot reliably operate without browser-style user sessions.
+
+Attribute	Assessment
+Classification	Critical
+Probability	High
+Impact	Critical
+Difficulty to fix	High
+Business risk	Forged health events, compromised device fleet, privacy breach
+Technical risk	No machine identity boundary
+C-05: RLS authorization is incomplete and role enforcement is ineffective
+Evidence: 00001_initial_schema.sql:509-533, 00001_initial_schema.sql:555-562, 00001_initial_schema.sql:640-647
+
+The database contains roles (owner, admin, member, viewer), but most policies check organization membership only.
+
+Examples:
+
+Any organization member can update pets.
+Any organization member can update devices.
+Medical record update policy does not check user role.
+The profile update policy permits users to update their own row, while the row contains role.
+There is no explicit role-aware policy layer for autonomous actions.
+The application types may hide some fields, but Supabase is directly accessible by the client and database authorization is the actual security boundary.
+
+Attribute	Assessment
+Classification	Critical
+Probability	High
+Impact	Critical
+Difficulty to fix	High
+Business risk	Privilege escalation and unauthorized medical/device changes
+Technical risk	Tenant isolation is confused with authorization
+High Findings
+H-01: Event ingestion does not trigger the declared pipeline
+Evidence: api/events/route.ts:99-115
+
+The event endpoint inserts rows into pet_events and returns. It does not invoke or enqueue:
+
+LCM update
+CRE evaluation
+CAE action generation
+Notification generation
+Reconciliation
+Failure retry
+The architecture says:
+
+Sensors -> Timeline -> LCM -> CRE -> CAE
+
+The implementation currently performs:
+
+Authenticated HTTP request -> PostgreSQL insert
+
+Attribute	Assessment
+Classification	High
+Probability	High
+Impact	High
+Difficulty to fix	High
+Business risk	Product promises real-time intelligence but produces no reliable downstream behavior
+Technical risk	Components are coupled conceptually but disconnected operationally
+H-02: CAE logs successful execution even when action execution fails
+Evidence: ActionEngine.ts:120-150
+
+The code creates a Timeline event titled CAE Action Executed and describes the action as completed before checking dispatchResult.success.
+
+A failed plugin execution can therefore produce a success-looking cognitive event. Timeline logging failure is also silently ignored.
+
+Attribute	Assessment
+Classification	High
+Probability	Medium
+Impact	High
+Difficulty to fix	Medium
+Business risk	Guardians receive false assurances
+Technical risk	Audit trail contradicts execution record
+H-03: Unsupported actions silently execute through the wrong plugin
+Evidence: ActionEngine.ts:39-42
+
+return plugin ?? this.plugins[0];
+Any unknown action is sent to the first registered plugin, currently TabletPlugin.
+
+This is an unsafe fail-open dispatch behavior. Unknown, malformed, future, or mistyped actions should not execute.
+
+Attribute	Assessment
+Classification	High
+Probability	Medium
+Impact	High
+Difficulty to fix	Low
+Business risk	Wrong device behavior
+Technical risk	Capability validation is bypassed
+H-04: Plugins do not have timeouts, cancellation, isolation, or real health checks
+Evidence: DevicePlugin.ts:5-15, all plugin implementations
+
+The interface provides execute() and health(), but:
+
+No timeout wrapper exists.
+No AbortSignal exists.
+No circuit breaker exists.
+No concurrency limit exists.
+No process or worker isolation exists.
+Health checks always return online.
+All hardware integrations are mocks.
+There is no device selection or capability-to-device resolution.
+A real plugin can block the request/runtime indefinitely.
+
+Attribute	Assessment
+Classification	High
+Probability	High once real plugins are added
+Impact	High
+Difficulty to fix	High
+Business risk	Runtime saturation and unresponsive actions
+Technical risk	Blocking external I/O inside request execution
+H-05: Approval is not an atomic state transition
+Evidence: ActionEngine.ts:168-184
+
+approveAction():
+
+Reads an action.
+Updates it to executing.
+Executes the previously read object.
+There is no condition requiring status = 'awaiting_approval', no check that requires_approval = true, and no atomic compare-and-set.
+
+Two guardians can approve the same action concurrently.
+
+Attribute	Assessment
+Classification	High
+Probability	Medium
+Impact	High
+Difficulty to fix	Medium
+Business risk	Duplicate physical execution
+Technical risk	Invalid state transitions
+H-06: CRE generates duplicate results on every evaluation
+Evidence: CognitiveReasoningEngine.ts:133-144, 150-164
+
+analyzeCompanion() always inserts new reasoning results. It does not:
+
+Deduplicate by input event/state version
+Close or expire previous results
+Use a deterministic result key
+Enforce uniqueness
+Prevent concurrent evaluations
+Use expires_at
+getInsights() can invoke analyzeCompanion() when no result exists, making request traffic part of the reasoning scheduler.
+
+Attribute	Assessment
+Classification	High
+Probability	High
+Impact	Medium
+Difficulty to fix	Medium
+Business risk	Repeated alerts and polluted user timelines
+Technical risk	Unbounded result growth and duplicate work
+H-07: CRE evidence is partly fabricated instead of derived from persisted observations
+Evidence: CognitiveReasoningEngine.ts:63-70, 83-89, 103-109
+
+The engine inserts fixed evidence such as:
+
+“Water intake 35% below 7-day average baseline”
+“Camera Vision sensor logged 0 water fountain visits”
+“Collar sensor logged elevated heart rate variability”
+“Recent door motion event logged”
+The code does not query those measurements in the evaluation. The claims are not tied to event IDs, telemetry IDs, model versions, or timestamps.
+
+Attribute	Assessment
+Classification	High
+Probability	High
+Impact	Critical for health claims
+Difficulty to fix	High
+Business risk	Misleading medical/behavioral advice
+Technical risk	Unverifiable reasoning and unsafe explainability
+H-08: Event and health ingestion policies are missing
+Evidence: 00001_initial_schema.sql:577-583, 00001_initial_schema.sql:609-615
+
+pet_events has a select policy but no insert policy. health_metrics also has a select policy but no insert policy.
+
+The corresponding endpoints attempt inserts using the authenticated client. Unless additional policies exist outside this repository, those writes will be rejected by RLS.
+
+This is both a functional defect and a sign that RLS behavior has not been integration-tested.
+
+Attribute	Assessment
+Classification	High
+Probability	High
+Impact	High
+Difficulty to fix	Low
+Business risk	Core telemetry ingestion fails
+Technical risk	Security policy and application behavior diverge
+H-09: Cross-tenant foreign-key consistency is not enforced
+Evidence: 00003_cognitive_timeline_engine.sql:9-18, 00006_companion_action_engine.sql:9-33
+
+Rows carry org_id, pet_id, and sometimes device_id, but the schema does not enforce that:
+
+pet_id belongs to org_id
+device_id belongs to org_id
+reasoning_id belongs to the same pet and organization
+action_id and execution organization match
+RLS policies checking only the row’s own org_id can be bypassed by creating inconsistent references through privileged paths or future service-role code.
+
+Attribute	Assessment
+Classification	High
+Probability	Medium
+Impact	Critical
+Difficulty to fix	High
+Business risk	Cross-tenant data association and incorrect actions
+Technical risk	Denormalized tenant keys without integrity constraints
+H-10: API input validation is inconsistent and lacks abuse controls
+Evidence: api/events/route.ts:35-49, api/events/route.ts:145-159, api/health/route.ts:11-21, api/chat/route.ts:12-14
+
+Issues include:
+
+No body size limits.
+No request rate limiting.
+No device-level quotas.
+No schema validation for chat messages.
+GET /api/events casts arbitrary query strings to enums instead of validating them.
+Limits are not consistently bounded or validated.
+Health values accept arbitrary ranges and units.
+Event metadata accepts arbitrary nested content.
+Attribute	Assessment
+Classification	High
+Probability	High
+Impact	High
+Difficulty to fix	Medium
+Business risk	Cost abuse, denial of service, poisoned data
+Technical risk	Unbounded input surface
+H-11: Chat endpoint has no explicit authentication or abuse protection
+Evidence: api/chat/route.ts:12-98
+
+The route does not call supabase.auth.getUser() directly. It relies on downstream queries returning data through RLS. It also accepts arbitrary messages, performs multiple database reads, and starts an LLM stream without:
+
+Message schema validation
+Maximum message count
+Maximum prompt size
+Token budget
+Request rate limit
+Cost quota
+Prompt injection defense
+Structured output validation
+Attribute	Assessment
+Classification	High
+Probability	High
+Impact	High
+Difficulty to fix	Medium
+Business risk	LLM cost exposure and unsafe advice
+Technical risk	Unbounded external dependency usage
+H-12: Realtime subscriptions are not tenant- or pet-filtered
+Evidence: useRealtime.ts:25-39, 61-88, 116-130
+
+Subscriptions use broad table-level Postgres change listeners. They do not specify organization or pet filters.
+
+Even where Supabase Realtime applies authorization checks, every connected client can create a broad subscription and receive all changes that the Realtime authorization layer permits. At scale, this produces unnecessary fan-out and client-side filtering work.
+
+The fixed channel names also create avoidable collisions if multiple subscriptions are mounted in the same browser.
+
+Attribute	Assessment
+Classification	High
+Probability	High at scale
+Impact	High
+Difficulty to fix	Medium
+Business risk	Data leakage risk, latency, connection cost
+Technical risk	Unbounded Realtime fan-out
+H-13: No offline SQLite synchronization implementation exists
+The repository contains no SQLite WAL, sync cursor, conflict resolver, durable outbox, or reconciliation worker.
+
+The architecture and documentation describe edge SQLite synchronization, but it is not implemented in the reviewed codebase.
+
+Attribute	Assessment
+Classification	High
+Probability	Certain for offline devices
+Impact	High
+Difficulty to fix	High
+Business risk	Lost observations during connectivity outages
+Technical risk	Architecture claim unsupported by implementation
+H-14: No retry, queue, dead-letter, backpressure, or recovery design exists
+Search of the runtime code found no durable work queue or retry policy. Database inserts and plugin calls are request-bound.
+
+A transient Supabase, network, LLM, or device failure will either fail the request or be silently swallowed. There is no durable record of work needing retry.
+
+Attribute	Assessment
+Classification	High
+Probability	High
+Impact	High
+Difficulty to fix	High
+Business risk	Missing events and incomplete actions
+Technical risk	Failure causes data loss rather than recoverable work
+H-15: Security-definer database functions lack hardened search path
+Evidence: 00001_initial_schema.sql:416-422, 448-475, 487-490
+
+handle_updated_at, handle_new_user, and get_user_org_id use security definer, but do not set a fixed search_path.
+
+Security-definer functions should use a hardened search path and explicit schema qualification. Otherwise, future objects or hostile object resolution can create privilege risks.
+
+Attribute	Assessment
+Classification	High
+Probability	Low to Medium
+Impact	Critical
+Difficulty to fix	Low
+Business risk	Potential privilege escalation
+Technical risk	Unsafe privileged function configuration
+Medium Findings
+M-01: No event ordering or sequence semantics
+Evidence: pet_events schema and TimelineService.ts
+
+Ordering is based on created_at, which is server insertion time. There is no source timestamp policy, device sequence number, ingestion sequence, or causation ID.
+
+Events arriving late can be interpreted as current events.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High
+Impact	High
+Difficulty to fix	Medium
+Business risk	Incorrect current state and timelines
+Technical risk	Temporal ambiguity
+M-02: Timeline queries are offsetless and lack stable pagination
+Evidence: TimelineService.ts:126-218, api/events/route.ts:151-160
+
+The APIs use limit() and created_at ordering but no cursor. Ties in created_at can produce duplicates or omissions between requests.
+
+For millions of events, repeated descending queries become increasingly inefficient without partitioning, retention, or cursor-based traversal.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High at scale
+Impact	Medium
+Difficulty to fix	Medium
+Business risk	Slow or incomplete history views
+Technical risk	Poor query scalability
+M-03: Timeline JSONB fields have no size or schema controls
+Evidence: 00003_cognitive_timeline_engine.sql:16-17
+
+metadata, observers, and related_events are unbounded JSONB values. This creates storage bloat, unpredictable row size, TOAST overhead, and difficult indexing.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High
+Impact	Medium
+Difficulty to fix	Medium
+Business risk	Storage cost and degraded query performance
+Technical risk	Unbounded payload model
+M-04: Index strategy is incomplete and includes redundant indexes
+Evidence: 00001_initial_schema.sql:186-188, 00003_cognitive_timeline_engine.sql:20-28, 00004_living_companion_models.sql:37-39, 00006_companion_action_engine.sql:36-44
+
+Problems include:
+
+Multiple overlapping pet_events indexes.
+No index for common event queries using (org_id, pet_id, created_at).
+Foreign keys such as action_executions.org_id, companion_actions.reasoning_id, and telemetry organization traversal lack appropriate indexes.
+No partial index for active CRE results.
+No evidence of EXPLAIN ANALYZE or production cardinality testing.
+Indexes use created_at, despite the absence of stable cursor semantics.
+Attribute	Assessment
+Classification	Medium
+Probability	High at scale
+Impact	High
+Difficulty to fix	Medium
+Business risk	Rising database cost and latency
+Technical risk	Index bloat and poor planner choices
+M-05: RLS policies use repeated subqueries and may become expensive
+Evidence: 00001_initial_schema.sql:543-646, 00002_device_hub_and_smart_bed.sql:40-46
+
+Many policies use:
+
+pet_id in (
+  select id from public.pets
+  where org_id = public.get_user_org_id()
+)
+This pattern can become expensive across high-volume telemetry tables. The security-definer helper is also called repeatedly by policies rather than using a carefully designed, indexed membership model.
+
+RLS must be benchmarked with realistic tenant sizes, not assumed to be free.
+
+Attribute	Assessment
+Classification	Medium
+Probability	Medium to High
+Impact	High
+Difficulty to fix	Medium
+Business risk	Latency and database capacity pressure
+Technical risk	Per-row policy evaluation overhead
+M-06: Realtime publication includes high-volume tables without volume policy
+Evidence: migrations 00001, 00003, 00004, 00005, 00006
+
+Realtime is enabled for events, LCM, CRE results, actions, executions, devices, notifications, and timeline entries.
+
+There is no event coalescing, sampling, tenant channel strategy, retention policy, or load test. At millions of animals, publishing raw events and derived state changes through one Supabase Realtime deployment can become a scaling limitation.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High at scale
+Impact	High
+Difficulty to fix	High
+Business risk	Delayed dashboards and elevated infrastructure cost
+Technical risk	WebSocket/fan-out saturation
+M-07: Cache behavior is undefined and state can become stale
+Evidence: LivingCompanionModelService.ts:5-9, dashboard/server usage, useRealtime.ts
+
+The LCM service claims to “cache” state but has no cache implementation. Next.js server rendering, browser state, Realtime updates, and Supabase queries have no documented invalidation contract.
+
+A dashboard can show stale LCM state while the database has newer events.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High
+Impact	Medium
+Difficulty to fix	Medium
+Business risk	Guardians make decisions from stale information
+Technical risk	Multiple unsynchronized read models
+M-08: CAE action and execution consistency is not transactional
+Evidence: ActionEngine.ts:141-162
+
+Execution insert and action status update are separate operations. Failure between them can leave:
+
+A completed physical action marked executing
+An execution row without a completed action
+A completed action without execution evidence
+A timeline event missing
+A timeline event present but execution missing
+Attribute	Assessment
+Classification	Medium
+Probability	Medium
+Impact	High
+Difficulty to fix	Medium
+Business risk	Incorrect support and audit outcomes
+Technical risk	Split-brain execution state
+M-09: Action execution outcome is ambiguous
+Evidence: DevicePlugin.ts:8-12, ActionEngine.ts:120-162
+
+The interface only returns success or failure. Real hardware frequently has an unknown result:
+
+Command accepted but response lost
+Device disconnected after actuation
+Timeout after physical execution
+Duplicate command after retry
+The model needs explicit unknown, verification, and reconciliation states.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High with real devices
+Impact	Critical for physical actions
+Difficulty to fix	High
+Business risk	Unsafe retries or false failure reports
+Technical risk	Binary outcome model is insufficient
+M-10: LCM initialization races
+Evidence: LivingCompanionModelService.ts:20-80
+
+Two concurrent requests can both find no LCM row and attempt to insert the initial state. The unique pet_id constraint prevents duplicate rows, but one request receives an error and returns null.
+
+This creates intermittent initialization failures.
+
+Attribute	Assessment
+Classification	Medium
+Probability	Medium
+Impact	Medium
+Difficulty to fix	Low
+Business risk	Intermittent blank companion state
+Technical risk	Read-before-create race
+M-11: LCM scoring logic is not a valid event-sourced model
+Evidence: LivingCompanionModelService.ts:98-137
+
+Scores are incremented using fixed constants per event:
+
+Sleeping increases energy by 5.
+Eating increases energy by 8.
+Drinking increases hydration by 15.
+Barking increases stress by 15.
+There is no time decay, duplicate event handling, source confidence weighting, unit validation, baseline lookup, or model versioning. Replaying the same event changes state repeatedly.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High
+Impact	High
+Difficulty to fix	High
+Business risk	Misleading health and wellness scores
+Technical risk	Non-replayable materialized state
+M-12: Health and telemetry values lack domain constraints
+Evidence: 00001_initial_schema.sql:241-249, 00002_device_hub_and_smart_bed.sql:6-32, api/health/route.ts:11-17
+
+There are no constraints for:
+
+Heart rate ranges
+Temperature ranges
+Weight ranges
+Battery percentages
+Activity ranges
+Negative metric values
+Timestamp validity
+Unit normalization
+Malformed or malicious sensor data can feed LCM and CRE.
+
+Attribute	Assessment
+Classification	Medium
+Probability	High
+Impact	High
+Difficulty to fix	Medium
+Business risk	False health alerts or missed alerts
+Technical risk	Poisoned analytical state
+M-13: No retention, archival, partitioning, or deletion policy
+Evidence: Timeline and telemetry migrations
+
+pet_events, telemetry, executions, and reasoning results grow indefinitely. There is no:
+
+Time partitioning
+Retention tier
+Archive process
+Legal hold support
+Tenant export/delete workflow
+Cold storage policy
+Attribute	Assessment
+Classification	Medium
+Probability	Certain over time
+Impact	High
+Difficulty to fix	High
+Business risk	Cost, privacy, and compliance exposure
+Technical risk	Table/index bloat
+M-14: Privacy and media access controls are under-specified
+Evidence: pet_events.video_clip_url, thumbnail_url, event_clips.storage_path
+
+There is no reviewed storage policy, signed URL service, object ownership check, retention policy, or media access audit trail.
+
+Pet video, location, health, and behavioral data are highly sensitive.
+
+Attribute	Assessment
+Classification	Medium
+Probability	Medium
+Impact	Critical
+Difficulty to fix	Medium
+Business risk	Privacy breach and regulatory exposure
+Technical risk	URLs can become durable data exfiltration paths
+Low Findings
+L-01: Errors are logged with console.error and often discarded
+Evidence: LivingCompanionModelService.ts:75-78, CognitiveReasoningEngine.ts:139-142, ActionEngine.ts:137-139
+
+There is no structured logging, correlation ID, severity, redaction, or central aggregation.
+
+Attribute	Assessment
+Classification	Low
+Probability	High
+Impact	Medium
+Difficulty to fix	Medium
+Business risk	Slow incident response
+Technical risk	Poor diagnosability
+L-02: No distributed tracing or business metrics
+There are no visible metrics for:
+
+Event ingestion latency
+LCM lag
+CRE evaluation duration
+Action queue age
+Plugin success rate
+Realtime connection count
+RLS query latency
+LLM cost
+Duplicate action rate
+Attribute	Assessment
+Classification	Low
+Probability	High
+Impact	High
+Difficulty to fix	Medium
+Business risk	Cannot operate or forecast the platform
+Technical risk	Blind production failures
+L-03: No automated tests were found
+No test files were found in the repository.
+
+There are no unit tests for event replay, LCM concurrency, CRE determinism, CAE state transitions, plugin failure, RLS, or tenant isolation.
+
+Attribute	Assessment
+Classification	Low
+Probability	Certain
+Impact	High
+Difficulty to fix	High
+Business risk	Regressions reach customers
+Technical risk	No executable specification
+L-04: Root development tooling is broken
+npm run type-check, npm run lint, and npm run build all fail because turbo is not recognized. npm ls also reports unmet root dependencies for turbo and prettier.
+
+This prevents basic release verification.
+
+Attribute	Assessment
+Classification	Low
+Probability	Certain
+Impact	High
+Difficulty to fix	Low
+Business risk	Unverified releases
+Technical risk	CI reproducibility failure
+L-05: No CI/CD, migration verification, or rollback evidence
+No CI workflow was found during repository review. There is no evidence of:
+
+Migration checks against a clean database
+RLS integration tests
+Type generation verification
+Dependency scanning
+Secret scanning
+Preview deployments
+Rollback drills
+Database backup restore tests
+Attribute	Assessment
+Classification	Low
+Probability	High
+Impact	High
+Difficulty to fix	Medium
+Business risk	Deployment outages and unrecoverable migrations
+Technical risk	Manual release process
+Direct Answers to Required Questions
+Can Timeline become a bottleneck?
+Yes.
+
+Reasons:
+
+Every event is stored as a full PostgreSQL row.
+JSONB payloads are unbounded.
+No partitioning or retention exists.
+Realtime publication is enabled.
+Queries use broad table reads and no cursor.
+No ingestion queue or rate control exists.
+No event aggregation or raw-vs-derived storage policy exists.
+The Timeline can be adequate for a small Alpha with low event rates, but not for millions of animals or high-frequency sensors. Cameras must not send frames or frame-level detections directly into this table.
+
+Can LCM become inconsistent?
+Yes, very easily.
+
+The implementation is read-modify-write with no locking, versioning, event ordering, replay protection, or monotonicity checks. Concurrent events and late-arriving events can overwrite newer state.
+
+The last_event_id field is stored but not used to reject stale events.
+
+Can Reasoning generate conflicting actions?
+Yes.
+
+CRE can produce multiple independent reasoning results from the same state. There is no:
+
+Deduplication
+Action arbitration
+Priority conflict resolver
+Cooldown
+Mutual exclusion
+Policy evaluation
+Safety envelope
+Model version
+Input snapshot
+Multiple rules can recommend contradictory actions, and nothing guarantees that CAE receives one coherent decision.
+
+Can Action Engine create duplicated executions?
+Yes.
+
+This is one of the highest-risk defects. There is no idempotency key, unique execution constraint, atomic claim, or execution lease.
+
+Concurrent approval, request retries, worker retries, or users double-clicking can duplicate execution.
+
+Can plugins block the runtime?
+Yes.
+
+Plugin calls run directly inside the request path. There are no timeouts, cancellation signals, concurrency limits, circuit breakers, or worker isolation.
+
+The current mock implementations do not prove that real integrations will behave safely.
+
+Can SQLite synchronization corrupt state?
+There is no SQLite synchronization implementation to assess.
+
+The documented architecture claims edge SQLite WAL support, but no SQLite database, WAL, sync cursor, conflict policy, or reconciliation code was found.
+
+If implemented later without deterministic event IDs, sequence numbers, durable outbox semantics, and conflict rules, corruption or duplication is likely.
+
+Can Supabase Realtime become a scaling limitation?
+Yes.
+
+The system publishes multiple high-volume tables and subscribes broadly from the browser. There is no load test, connection budget, event coalescing, tenant-specific channel model, or fallback behavior.
+
+Realtime should not be treated as the durable event-processing mechanism.
+
+Can RLS policies become expensive?
+Yes.
+
+The policies repeatedly evaluate organization membership through subqueries, especially for telemetry and pet-linked tables. At high event volume and large tenants, policy evaluation can become a meaningful part of query cost.
+
+RLS must remain enabled, but query plans need to be measured with realistic tenant sizes and indexes.
+
+Can PostgreSQL indexes become inefficient?
+Yes.
+
+Current indexes are partly redundant and do not fully match the actual query patterns. The system lacks:
+
+Query-plan validation
+Partial indexes for active records
+Composite indexes for common tenant/pet/time access
+Index maintenance and bloat monitoring
+Partition-aware index strategy
+Indexing will degrade as append-only tables grow.
+
+Can cache invalidation create stale state?
+Yes.
+
+The code claims LCM caching but has no explicit cache layer or invalidation contract. Server-rendered data, browser state, Realtime payloads, and database state can diverge.
+
+Approval Conditions
+Project One should not enter Alpha until all Critical findings and the mandatory High controls below are complete and verified.
+
+Mandatory Engineering Backlog Before Alpha
+P0: Blocking
+Implement CAE idempotency keys and unique action-effect constraints.
+Implement atomic action claiming with valid state transitions.
+Add execution leases, attempt numbers, and unknown-outcome handling.
+Add plugin timeout, cancellation, circuit breaker, and concurrency controls.
+Reject unsupported actions instead of falling back to TabletPlugin.
+Add device authentication with per-device credentials or certificates.
+Bind devices cryptographically to an organization and device record.
+Enforce Timeline immutability at the database layer.
+Add event sequence/source timestamp/causation identifiers.
+Add optimistic concurrency or transactional serialization for LCM.
+Reject stale and duplicate events during LCM materialization.
+Make LCM replayable from Timeline events.
+Make CRE inputs evidence-backed and tied to event/telemetry IDs.
+Add CRE deduplication, expiration, and evaluation versioning.
+Add action arbitration, cooldowns, mutual exclusion, and safety policy checks.
+Correct missing event and health insertion RLS policies.
+Enforce role-aware RLS policies.
+Prevent profile users from modifying their own authorization role.
+Add cross-tenant foreign-key integrity checks.
+Add RLS integration tests for every table and role.
+P1: Required for Alpha
+Implement a durable event-processing queue or equivalent recoverable worker mechanism.
+Add retry policies with exponential backoff and jitter.
+Add dead-letter storage and operator replay.
+Add ingestion rate limits and tenant/device quotas.
+Add request body and metadata size limits.
+Validate all API query parameters with Zod.
+Validate chat messages and enforce prompt/token limits.
+Add LLM cost and abuse controls.
+Separate device ingestion credentials from guardian session credentials.
+Add structured logs with request, tenant, pet, event, action, and correlation IDs.
+Add distributed tracing across ingestion, LCM, CRE, CAE, plugins, and database calls.
+Add metrics and SLOs for event lag, action latency, failures, and queue depth.
+Replace broad Realtime subscriptions with scoped filters.
+Load-test Supabase Realtime connection and fan-out behavior.
+Add cursor pagination to Timeline and telemetry APIs.
+Define raw telemetry, normalized events, derived state, and analytical storage boundaries.
+Add database partitioning or an explicit retention/archive strategy.
+Add signed media URLs, storage RLS, media retention, and access auditing.
+Implement SQLite edge WAL and durable outbox synchronization.
+Define offline conflict resolution and replay semantics.
+P2: Required for production expansion
+Add automated unit, integration, property-based, and concurrency tests.
+Add RLS tenant-isolation tests using multiple organizations.
+Add plugin contract and hardware-in-the-loop tests.
+Add failure-injection tests for Supabase, plugins, Realtime, and LLM providers.
+Repair root workspace tooling and lockfile reproducibility.
+Add CI for type-check, lint, build, migrations, tests, and security scanning.
+Add dependency, secret, container, and static security scanning.
+Add backup restore and disaster-recovery drills.
+Add migration rollback/forward-compatibility procedures.
+Document operational runbooks, incident response, alert ownership, and release gates.
+Top 50 Production Readiness Improvements
+Ordered approximately by risk reduction.
+
+Add a unique idempotency key to every logical action.
+Add a unique constraint preventing duplicate action effects.
+Add atomic pending -> executing action claiming.
+Add execution attempt records and leases.
+Add unknown execution status.
+Add plugin timeout and cancellation support.
+Add plugin circuit breakers.
+Add plugin concurrency limits.
+Reject unsupported action types.
+Add device capability and target-device validation.
+Replace mock health checks with real health checks.
+Add device certificates or rotated device API keys.
+Add replay protection to device requests.
+Make Timeline rows database-immutable.
+Add server-generated event sequence numbers.
+Add source event timestamps and ingestion timestamps.
+Add causation and correlation IDs.
+Add duplicate event detection.
+Add LCM version or compare-and-swap updates.
+Enforce monotonic event application.
+Make LCM state reconstructable by replay.
+Add LCM materialization lag monitoring.
+Add CRE input snapshot IDs.
+Tie every CRE evidence item to persisted source records.
+Add CRE result deduplication.
+Add CRE result expiration and supersession.
+Add rule/model version fields.
+Add action conflict arbitration.
+Add action cooldown and rate limits.
+Add guardian safety policy enforcement.
+Add missing RLS insert policies.
+Add role-specific RLS policies.
+Protect authorization fields from self-edit.
+Enforce tenant consistency across foreign keys.
+Harden all SECURITY DEFINER functions.
+Add RLS integration tests.
+Add API rate limiting.
+Add API payload and JSONB size limits.
+Add chat validation and token budgets.
+Add durable queue and dead-letter handling.
+Add exponential retry with jitter.
+Add cursor-based Timeline pagination.
+Add query-plan benchmarks and index review.
+Add table partitioning and retention.
+Add scoped Realtime subscriptions.
+Add Realtime load and reconnect testing.
+Implement SQLite WAL/outbox synchronization.
+Add structured logging, tracing, and metrics.
+Add CI/CD with migration and security gates.
+Perform disaster recovery, restore, and failure-injection exercises.
+What Is Good
+The following decisions are directionally sound and should be preserved:
+
+Separating Timeline, LCM, CRE, CAE, and plugins conceptually.
+Using PostgreSQL RLS as a tenant-isolation boundary.
+Keeping hardware integration behind a plugin interface.
+Persisting reasoning results separately from current LCM state.
+Recording execution metadata separately from requested actions.
+Using Zod in several HTTP endpoints.
+Using Supabase Auth session verification for guardian-facing routes.
+Including explainability fields such as evidence, recommendations, confidence, and related events.
+Treating the Timeline as the intended source of truth.
+These are good foundations, but they are not sufficient without the operational controls listed above.
+
+Final CTO Decision
+DO NOT APPROVE
+
+The architecture may proceed as an internal prototype or tightly controlled simulator Alpha after the core data integrity, authorization, and execution safeguards are implemented.
+
+It should not currently be used for:
+
+Autonomous physical actuation
+Real veterinary or emergency decisions
+Production health claims
+Untrusted pilot customers
+Offline device fleet deployment
+Millions of animals
+Investor claims that the described event-sourced runtime is operational
+The project is not blocked by the high-level decomposition. It is blocked because the implementation does not yet enforce the safety, consistency, recoverability, scalability, and security properties that the architecture claims.
+
