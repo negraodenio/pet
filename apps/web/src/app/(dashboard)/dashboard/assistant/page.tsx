@@ -26,12 +26,12 @@ export default function AssistantPage() {
   }, [messages]);
 
   const suggestedQuestions = [
-    "How was my pet today?",
-    "Show me all events this week",
-    "Is my pet's activity level normal?",
-    "Generate a health summary",
-    "What should I feed a Golden Retriever?",
-    "Tips for reducing pet anxiety",
+    "Did Bento sleep well last night?",
+    "Is Bento's breathing rate (16 BrPM) normal?",
+    "When is Bento's arthritis supplement due?",
+    "Explain Bento's heart murmur in simple words",
+    "Prepare a quick summary for our vet visit",
+    "What signs of pain should I watch out for in senior dogs?",
   ];
 
   const handleSend = async (text: string) => {
