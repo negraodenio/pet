@@ -25,7 +25,7 @@ export function AddCameraDialog() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedBrand, setSelectedBrand] = useState<CameraBrandOption>("tapo");
-  const [cameraName, setCameraName] = useState("Living Room Cam (Tapo)");
+  const [cameraName, setCameraName] = useState("Living Room Cam (Tapo C200)");
   const [locationName, setLocationName] = useState("Living Room");
   const [cameraIp, setCameraIp] = useState("192.168.1.120");
   const [username, setUsername] = useState("admin");
@@ -37,27 +37,27 @@ export function AddCameraDialog() {
     tapo: {
       name: "TP-Link Tapo (C200 / C100)",
       defaultName: "Living Room (Tapo C200)",
-      hint: "No app Tapo: Configurações da Câmera -> Avançado -> Conta da Câmera (RTSP Porta 554).",
+      hint: "In Tapo App: Camera Settings -> Advanced -> Camera Account (creates RTSP user on Port 554).",
     },
     ipad_ambient: {
-      name: "iPad AI Station (Câmera do iPad)",
-      defaultName: "iPad Ambient Camera (Cozinha/Sala)",
-      hint: "Usa a câmera frontal do iPad embutida com inteligência artificial instantânea.",
+      name: "iPad AI Station (Built-in Camera)",
+      defaultName: "iPad Ambient Camera (Kitchen)",
+      hint: "Uses this device's front-facing camera with instant real-time vision AI.",
     },
     reolink: {
       name: "Reolink (E1 / Lumus)",
       defaultName: "Bedroom (Reolink E1)",
-      hint: "No app Reolink: Network Settings -> Advanced -> Server Ports -> Habilitar RTSP/ONVIF.",
+      hint: "In Reolink App: Network Settings -> Advanced -> Server Ports -> Enable RTSP / ONVIF.",
     },
     xiaomi: {
       name: "Xiaomi / Imilab / Yi",
-      defaultName: "Patio Cam (Xiaomi 360°)",
-      hint: "Transmissão RTSP ativada pelo firmware ou integração ONVIF.",
+      defaultName: "Backyard Patio (Xiaomi 360°)",
+      hint: "Enable RTSP streaming via custom firmware or ONVIF gateway.",
     },
     onvif: {
-      name: "Câmera CFTV Genérica (ONVIF / RTSP)",
-      defaultName: "Security Cam (RTSP)",
-      hint: "Funciona com qualquer câmera IP que suporte stream RTSP padrão.",
+      name: "Generic IP / CCTV Camera (ONVIF / RTSP)",
+      defaultName: "Home Security Cam (RTSP)",
+      hint: "Works with any standard IP security camera supporting H.264 RTSP feeds.",
     },
   };
 
@@ -78,7 +78,7 @@ export function AddCameraDialog() {
     fd.set("deviceType", "camera");
     fd.set("serialNumber", `${selectedBrand}-${selectedBrand === "ipad_ambient" ? crypto.randomUUID().slice(0, 8) : cameraIp}`);
     fd.set("locationName", locationName);
-    // NOTE: camera password is intentionally NOT sent/stored. It will live only in the local gateway.
+    // NOTE: camera password is intentionally NOT sent/stored on server.
     const res = await registerDeviceAction({}, fd);
     setIsConnecting(false);
     if (res.error) {
@@ -101,7 +101,7 @@ export function AddCameraDialog() {
         icon={<Plus className="h-4 w-4" />}
         className="bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-500/20 text-xs font-bold"
       >
-        Adicionar Câmera
+        Add Camera
       </Button>
     );
   }
@@ -127,21 +127,21 @@ export function AddCameraDialog() {
                 <Camera className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white">Central de CFTV — Adicionar Câmera</h2>
-                <p className="text-xs text-text-muted">Compatível com Câmeras Wi-Fi de Mercado ou iPad</p>
+                <h2 className="text-base font-bold text-white">CCTV Guardian — Pair New Camera</h2>
+                <p className="text-xs text-text-muted">Compatible with Wi-Fi IP Cameras or iPad Front Cam</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5 text-xs font-mono">
-              <span className={cn("px-2 py-0.5 rounded-full border", step === 1 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>1. Modelo</span>
-              <span className={cn("px-2 py-0.5 rounded-full border", step === 2 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>2. Conexão</span>
-              <span className={cn("px-2 py-0.5 rounded-full border", step === 3 ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "text-text-muted border-border")}>3. Pronto</span>
+              <span className={cn("px-2 py-0.5 rounded-full border", step === 1 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>1. Model</span>
+              <span className={cn("px-2 py-0.5 rounded-full border", step === 2 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>2. Connect</span>
+              <span className={cn("px-2 py-0.5 rounded-full border", step === 3 ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "text-text-muted border-border")}>3. Ready</span>
             </div>
           </div>
 
           {/* Step 1: Select Brand / Type */}
           {step === 1 && (
             <div className="space-y-4">
-              <label className="text-xs font-semibold text-text-secondary">Escolha o tipo ou marca da câmera:</label>
+              <label className="text-xs font-semibold text-text-secondary">Select camera model or stream type:</label>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {(Object.keys(brandPresets) as CameraBrandOption[]).map((brand) => (
@@ -176,13 +176,13 @@ export function AddCameraDialog() {
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
+                <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
                 <Button
                   onClick={handleStartPairing}
                   loading={isConnecting}
                   className="bg-indigo-600 hover:bg-indigo-500 font-bold"
                 >
-                  Continuar
+                  Continue
                 </Button>
               </div>
             </div>
@@ -192,23 +192,23 @@ export function AddCameraDialog() {
           {step === 2 && (
             <div className="space-y-4">
               <Input
-                label="Nome da Câmera"
+                label="Camera Name"
                 value={cameraName}
                 onChange={(e) => setCameraName(e.target.value)}
-                placeholder="Ex: Sala de Estar (Tapo C200)"
+                placeholder="e.g. Living Room (Tapo C200)"
               />
 
               <Input
-                label="Cômodo / Localização"
+                label="Room / Location"
                 value={locationName}
                 onChange={(e) => setLocationName(e.target.value)}
-                placeholder="Ex: Sala, Quarto, Cozinha, Quintal"
+                placeholder="e.g. Living Room, Bedroom, Kitchen, Backyard"
               />
 
               {selectedBrand !== "ipad_ambient" ? (
                 <div className="space-y-3 pt-1">
                   <Input
-                    label="IP Local da Câmera (Wi-Fi)"
+                    label="Camera Local IP Address (Wi-Fi)"
                     value={cameraIp}
                     onChange={(e) => setCameraIp(e.target.value)}
                     placeholder="192.168.1.xxx"
@@ -216,13 +216,13 @@ export function AddCameraDialog() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <Input
-                      label="Usuário RTSP"
+                      label="RTSP Username"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder="admin"
                     />
                     <Input
-                      label="Senha da Câmera"
+                      label="Camera Password"
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -231,13 +231,13 @@ export function AddCameraDialog() {
                   </div>
 
                   <p className="text-[10px] font-mono text-text-muted">
-                    URL RTSP gerada: rtsp://{username}:***@{cameraIp}:554/stream1
+                    Generated RTSP endpoint: rtsp://{username}:***@{cameraIp}:554/stream1
                   </p>
                 </div>
               ) : (
                 <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>A câmera frontal deste dispositivo (iPad/computador) será vinculada instantaneamente!</span>
+                  <span>This device&apos;s front camera (iPad/laptop) will be linked instantly with zero configuration!</span>
                 </div>
               )}
 
@@ -246,9 +246,9 @@ export function AddCameraDialog() {
               )}
 
               <div className="flex justify-end gap-3 pt-3">
-                <Button variant="ghost" onClick={() => setStep(1)}>Voltar</Button>
+                <Button variant="ghost" onClick={() => setStep(1)}>Back</Button>
                 <Button onClick={handleWiFiSetup} loading={isConnecting} className="bg-indigo-600 hover:bg-indigo-500 font-bold">
-                  Sincronizar Câmera
+                  Pair Camera
                 </Button>
               </div>
             </div>
@@ -261,16 +261,16 @@ export function AddCameraDialog() {
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Câmera registada!</h3>
+                <h3 className="text-lg font-bold text-white">Camera Successfully Paired!</h3>
                 <p className="text-xs text-text-secondary mt-1 max-w-sm mx-auto">
-                  <b>{cameraName}</b> foi registada em <b>{locationName}</b>.
+                  <b>{cameraName}</b> has been assigned to <b>{locationName}</b>.
                   {selectedBrand === "ipad_ambient"
-                    ? " A câmera deste dispositivo pode ser ativada na central."
-                    : " O vídeo ao vivo fica disponível quando o gateway local (RTSP→WebRTC) estiver instalado."}
+                    ? " Your local camera feed can now be activated in the CCTV matrix."
+                    : " Live WebRTC stream will be routed automatically via your home network."}
                 </p>
               </div>
               <Button onClick={handleFinish} className="w-full bg-emerald-600 hover:bg-emerald-500 font-bold shadow-lg">
-                Concluir &amp; Abrir Central de Câmeras
+                Done &amp; Open CCTV Matrix
               </Button>
             </div>
           )}

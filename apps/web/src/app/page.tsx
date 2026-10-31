@@ -24,9 +24,9 @@ import { Button } from "@/shared/components/ui/Button";
 import { Badge } from "@/shared/components/ui/Badge";
 
 export const metadata = {
-  title: "Compawion — Amor, Saúde e Cuidado Inteligente para o seu Pet",
+  title: "Compawion Care — Invisible Health & Wellness for Your Pet",
   description:
-    "O primeiro ecossistema invisível de saúde para cães e gatos. Tapete inteligente com monitoramento de batimentos e sono, câmeras com IA e assistente veterinário 24/7.",
+    "The world's first invisible pet health ecosystem. Smart Orthopedic Bed with continuous heart rate and sleep telemetry, AI CCTV cameras, and 24/7 veterinary intelligence.",
 };
 
 export default function LandingPage() {
@@ -53,24 +53,24 @@ export default function LandingPage() {
                   </span>
                 </div>
                 <span className="text-[10px] text-text-muted font-medium">
-                  Cuidado Inteligente para Pets
+                  Invisible Pet Health Intelligence
                 </span>
               </div>
             </Link>
 
             {/* Quick Anchor Links (Desktop) */}
             <div className="hidden md:flex items-center gap-6 text-xs font-semibold text-text-secondary">
-              <a href="#tapete" className="hover:text-amber-400 transition-colors">
-                O Tapete Inteligente
+              <a href="#smart-bed" className="hover:text-amber-400 transition-colors">
+                The Smart Bed
               </a>
               <a href="#cameras" className="hover:text-amber-400 transition-colors">
-                Central de Câmeras
+                AI Vision CCTV
               </a>
-              <a href="#ipad" className="hover:text-amber-400 transition-colors">
-                Estação iPad
+              <a href="#ipad-station" className="hover:text-amber-400 transition-colors">
+                iPad Station
               </a>
-              <a href="#planos" className="hover:text-amber-400 transition-colors">
-                Planos &amp; Preços
+              <a href="#pricing" className="hover:text-amber-400 transition-colors">
+                Plans &amp; Pricing
               </a>
             </div>
 
@@ -82,7 +82,7 @@ export default function LandingPage() {
                   size="sm"
                   className="text-xs font-semibold text-text-secondary hover:text-white"
                 >
-                  Entrar
+                  Sign In
                 </Button>
               </Link>
               <Link href="/register">
@@ -90,7 +90,7 @@ export default function LandingPage() {
                   size="sm"
                   className="text-xs font-bold bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white shadow-lg shadow-amber-500/20 border-0 rounded-xl px-4 py-2"
                 >
-                  Começar Agora
+                  Get Started Free
                 </Button>
               </Link>
             </div>
@@ -107,23 +107,23 @@ export default function LandingPage() {
           {/* Heartwarming Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-indigo-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-6 animate-fade-in shadow-sm">
             <Heart className="h-4 w-4 text-rose-400 fill-rose-400 animate-pulse" />
-            <span>Cuidado e tranquilidade real para quem ama o seu pet como filho</span>
+            <span>Pure peace of mind for pet parents who love their dogs and cats like family</span>
           </div>
 
           {/* Emotional Main Title */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
-            Ele só precisa dormir.
+            All they have to do is sleep.
             <br />
             <span className="bg-gradient-to-r from-amber-300 via-rose-400 to-indigo-400 bg-clip-text text-transparent">
-              Nós cuidamos do coração e da saúde.
+              We watch over their heart, breath, and health.
             </span>
           </h1>
 
           <p className="text-base sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed mb-8">
-            <b>Sem coleiras desconfortáveis e sem estresse.</b> O seu companheiro deita
-            no tapete ortopédico com sensores invisíveis que acompanham batimentos cardíacos,
-            respiração, peso e sono — avisando você e o veterinário antes que qualquer
-            problema se torne grave.
+            <b>Zero uncomfortable wearables. Zero daily stress.</b> Your dog or cat rests
+            on an orthopedic smart bed with invisible medical-grade sensors that monitor heart rate,
+            respiratory rate, weight, and sleep quality — warning you and your veterinarian before
+            subtle symptoms turn into emergencies.
           </p>
 
           {/* Hero CTAs */}
@@ -133,7 +133,7 @@ export default function LandingPage() {
                 size="lg"
                 className="w-full sm:w-auto h-14 px-8 text-sm font-bold bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white shadow-xl shadow-amber-500/25 border-0 rounded-2xl gap-2"
               >
-                Garantir Meu Acesso com Desconto <ArrowRight className="h-4 w-4" />
+                Claim Your Launch Offer <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
 
@@ -143,7 +143,7 @@ export default function LandingPage() {
                 size="lg"
                 className="w-full sm:w-auto h-14 px-8 text-sm font-semibold border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-2xl gap-2"
               >
-                Ver Central Interativa ao Vivo
+                Explore Live Demo Hub
               </Button>
             </Link>
           </div>
@@ -157,27 +157,27 @@ export default function LandingPage() {
                 ))}
               </div>
               <span className="text-white font-bold">4.9/5</span>
-              <span>Avaliação de Tutores</span>
+              <span>from US &amp; UK Pet Parents</span>
             </div>
             <span className="hidden sm:inline text-white/20">&bull;</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-              <span>100% Livre de Coleiras Invasivas</span>
+              <span>100% Collar-Free &amp; Wearable-Free</span>
             </div>
             <span className="hidden sm:inline text-white/20">&bull;</span>
             <div className="flex items-center gap-1.5">
               <Stethoscope className="h-4 w-4 text-indigo-400" />
-              <span>Relatórios Prontos para o Veterinário</span>
+              <span>Vet-Ready Clinical Health Exports</span>
             </div>
           </div>
 
-          {/* Hero Visual Showcase — The Real Sleeping Dog on Smart Bed with Glassmorphic Telemetry HUD */}
+          {/* Hero Visual Showcase — Real Sleeping Dog on Smart Bed with Glassmorphic Telemetry HUD */}
           <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl shadow-black/80 max-w-5xl mx-auto group">
             {/* The Generated High-End Photo */}
             <div className="relative aspect-[16/9] w-full bg-slate-900">
               <Image
                 src="/images/smart-bed-hero.jpg"
-                alt="Golden retriever dormindo tranquilamente no tapete inteligente Compawion"
+                alt="Golden retriever resting peacefully on Compawion orthopedic smart bed in a sunlit living room"
                 fill
                 priority
                 className="object-cover group-hover:scale-[1.01] transition-transform duration-700"
@@ -195,12 +195,12 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-mono text-amber-300 font-bold">
-                    Batimento Cardíaco (BCG)
+                    Heart Rate (BCG Ballistocardiogram)
                   </div>
                   <div className="text-base sm:text-lg font-black text-white flex items-center gap-1.5">
                     74 <span className="text-xs font-normal text-text-muted">BPM</span>
                     <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 font-sans font-bold">
-                      Calmo
+                      Calm &amp; Resting
                     </span>
                   </div>
                 </div>
@@ -213,12 +213,12 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-mono text-rose-300 font-bold">
-                    Frequência Respiratória
+                    Sleeping Respiration Rate (SRR)
                   </div>
                   <div className="text-base sm:text-lg font-black text-white flex items-center gap-1.5">
-                    18 <span className="text-xs font-normal text-text-muted">RPM</span>
+                    18 <span className="text-xs font-normal text-text-muted">BrPM</span>
                     <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-500/20 text-indigo-300 font-sans font-bold">
-                      Sono REM
+                      Deep REM
                     </span>
                   </div>
                 </div>
@@ -231,12 +231,12 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-mono text-indigo-300 font-bold">
-                    Pesagem Automática
+                    Automatic Daily Weigh-In
                   </div>
                   <div className="text-base sm:text-lg font-black text-white flex items-center gap-1.5">
-                    28,4 <span className="text-xs font-normal text-text-muted">kg</span>
+                    62.5 <span className="text-xs font-normal text-text-muted">lbs (28.4 kg)</span>
                     <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 font-sans font-bold">
-                      Peso Ideal
+                      Optimal
                     </span>
                   </div>
                 </div>
@@ -247,22 +247,22 @@ export default function LandingPage() {
       </section>
 
       {/* 3. The 3 Core Pillars of Compawion (How the System Works) */}
-      <section id="tapete" className="py-24 px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-[#0E1017]/60">
+      <section id="smart-bed" className="py-24 px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-[#0E1017]/60">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <Badge variant="primary" className="mb-3">
-              O Ecossistema Completo
+              The 3-Pillar Ecosystem
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Hardware invisível na sua casa.
+              Invisible hardware in your home.
               <br />
               <span className="bg-gradient-to-r from-amber-400 to-rose-400 bg-clip-text text-transparent">
-                Toda a saúde do seu pet na palma da mão.
+                Every vital sign in the palm of your hand.
               </span>
             </h2>
             <p className="text-sm text-text-secondary mt-3">
-              Desenvolvemos três elementos que se conectam em segundos para criar a
-              rede de proteção mais avançada do mundo para animais de companhia.
+              We engineered three elegant layers that connect in seconds to build the world&apos;s
+              most advanced, non-invasive health safety net for companion animals.
             </p>
           </div>
 
@@ -274,31 +274,31 @@ export default function LandingPage() {
                   <BedDouble className="h-6 w-6" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">
-                  1. O Tapete Inteligente (Smart Bed)
+                  1. The Invisible Smart Bed
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed mb-4">
-                  Caminha ortopédica com capa lavável e <b>sensores piezoelétricos invisíveis</b>.
-                  Captura micro-movimentos cardíacos e respiratórios sem que o animal
-                  precise usar nada no corpo.
+                  Medical-grade orthopedic memory foam with a machine-washable cover and
+                  <b> invisible piezoelectric BCG sensors</b>. Detects micro-cardiac contractions
+                  and respiratory expansion without anything touching your pet&apos;s skin.
                 </p>
                 <ul className="space-y-2 text-xs text-text-muted">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" />
-                    Batimentos e respiração durante o sono
+                    Sleep heart rate &amp; breathing telemetry
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" />
-                    Células de carga para pesagem diária
+                    Four strain-gauge load cells for daily weigh-ins
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" />
-                    Cabo magnético ultra seguro anti-tropeço
+                    Chew-resistant magnetic breakaway power cable
                   </li>
                 </ul>
               </div>
               <div className="pt-6 border-t border-white/5 mt-6">
                 <span className="text-[11px] font-mono text-amber-300">
-                  Zero wearable &bull; Conforto ortopédico
+                  Zero wearables &bull; Orthopedic joint relief
                 </span>
               </div>
             </div>
@@ -310,67 +310,67 @@ export default function LandingPage() {
                   <Video className="h-6 w-6" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">
-                  2. Câmeras Wi-Fi com IA Clínica
+                  2. Clinical AI Camera Matrix
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed mb-4">
-                  Compatível com câmeras acessíveis de mercado (como a <b>TP-Link Tapo</b> de ~20€).
-                  A nossa IA filtra vento e sombras para alertar apenas eventos reais:
-                  vômitos, tosse, apatia ou ansiedade.
+                  Works seamlessly with budget-friendly Wi-Fi cameras (like the <b>$25 TP-Link Tapo C200</b> or Reolink).
+                  Our vision AI filters out shadows, wind, and robot vacuums to alert only on genuine health events:
+                  retching, coughing, pacing, or limping.
                 </p>
                 <ul className="space-y-2 text-xs text-text-muted">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-indigo-400" />
-                    Detecção de vômitos, tosse e dor
+                    Automated cough, retch, &amp; seizure flagging
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-indigo-400" />
-                    Central de CFTV com visão multi-cômodos
+                    Multi-room CCTV grid with real-time WebRTC
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-indigo-400" />
-                    Giro motorizado PTZ e microfone para falar
+                    Motorized PTZ pan/tilt and two-way voice talk
                   </li>
                 </ul>
               </div>
               <div className="pt-6 border-t border-white/5 mt-6">
                 <span className="text-[11px] font-mono text-indigo-300">
-                  Plug &amp; Play &bull; Alertas sem falsos positivos
+                  Plug &amp; Play RTSP &bull; Zero false alarm fatigue
                 </span>
               </div>
             </div>
 
             {/* Pillar 3: iPad Station & AI Vet */}
-            <div id="ipad" className="glass-panel p-6 border-rose-500/20 hover:border-rose-500/40 transition-all rounded-3xl flex flex-col justify-between">
+            <div id="ipad-station" className="glass-panel p-6 border-rose-500/20 hover:border-rose-500/40 transition-all rounded-3xl flex flex-col justify-between">
               <div>
                 <div className="p-3 rounded-2xl bg-rose-500/10 text-rose-400 w-fit mb-5">
                   <Tablet className="h-6 w-6" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">
-                  3. Estação iPad &amp; Assistente IA 24/7
+                  3. iPad Station &amp; 24/7 AI Vet Assistant
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed mb-4">
-                  Coloque um iPad na sala ou cozinha como central interativa. Ele
-                  toca áudio calmante de 432 Hz se o cão chorar e conta com o <b>Claude 5.5</b> para
-                  esclarecer dúvidas de saúde a qualquer hora.
+                  Repurpose any new or idle iPad on a kitchen stand as an interactive sentinel.
+                  Plays 432 Hz bio-acoustic calming music when separation anxiety is sensed,
+                  powered by <b>Claude 5.5 Sonnet</b> to interpret health questions anytime.
                 </p>
                 <ul className="space-y-2 text-xs text-text-muted">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-rose-400" />
-                    Músicas calmantes automáticas anti-ansiedade
+                    Automatic sound therapy for barking &amp; whining
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-rose-400" />
-                    Chat veterinário embasado nos dados do pet
+                    24/7 clinical AI chat grounded in your pet&apos;s vitals
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-rose-400" />
-                    Histórico médico exportável em 1 clique
+                    1-click exportable PDF records for veterinary visits
                   </li>
                 </ul>
               </div>
               <div className="pt-6 border-t border-white/5 mt-6">
                 <span className="text-[11px] font-mono text-rose-300">
-                  Acalma o pet sozinho &bull; Apoio veterinário
+                  Calms anxiety alone &bull; Diagnostic support
                 </span>
               </div>
             </div>
@@ -384,18 +384,18 @@ export default function LandingPage() {
           <div className="space-y-6 text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold">
               <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
-              <span>A Central Fixa da sua Casa</span>
+              <span>Dedicated Ambient Station</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
-              Transforme o seu iPad na central que acompanha o seu pet o dia todo.
+              Turn your countertop iPad into an always-on guardian for your pet.
             </h2>
 
             <p className="text-sm text-text-secondary leading-relaxed">
-              Deixe um iPad antigo ou novo num suporte na cozinha ou sala. O Compawion
-              funciona como um monitor inteligente sempre ligado: exibe a saúde do animal,
-              permite falar com ele com um toque e até usa a câmera frontal para
-              reconhecer quando ele se aproxima do bebedouro.
+              Dock your iPad on a sleek wooden stand in the kitchen or living room. Compawion OS
+              runs seamlessly as an ambient kiosk: displaying live resting vitals, offering 1-tap
+              push-to-talk, and utilizing front-camera vision to notice when your pet drinks water
+              or asks to go outside.
             </p>
 
             <div className="space-y-3 pt-2">
@@ -404,10 +404,10 @@ export default function LandingPage() {
                   <Volume2 className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white">Protocolo Acústico de Conforto</h4>
+                  <h4 className="text-xs font-bold text-white">Bio-Acoustic Calming Protocol</h4>
                   <p className="text-[11px] text-text-muted">
-                    Se o cão latir para a porta ou demonstrar ansiedade, a estação reproduz
-                    automaticamente um áudio de 432 Hz ou a sua voz gravada para acalmá-lo.
+                    If your pet barks at the door or shows signs of separation distress while you&apos;re away,
+                    the station automatically initiates soothing 432 Hz psychoacoustic tracks or your recorded voice.
                   </p>
                 </div>
               </div>
@@ -417,10 +417,10 @@ export default function LandingPage() {
                   <Stethoscope className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white">Relatório Completo para a Consulta</h4>
+                  <h4 className="text-xs font-bold text-white">Longitudinal Clinical Dossier</h4>
                   <p className="text-[11px] text-text-muted">
-                    Chega de tentar lembrar: &ldquo;ele começou a mancar na terça ou quarta?&rdquo;.
-                    O app gera um prontuário médico cronológico com gráficos de batimentos e vídeos das alterações.
+                    No more guessing at the vet clinic: &ldquo;Did the limping start Tuesday or Wednesday?&rdquo;
+                    The app creates a structured clinical timeline complete with heart rate trendlines and timestamped video clips.
                   </p>
                 </div>
               </div>
@@ -431,7 +431,7 @@ export default function LandingPage() {
           <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl shadow-black/80 aspect-[4/3] bg-slate-900 group">
             <Image
               src="/images/tablet-station.jpg"
-              alt="Estação iPad na cozinha mostrando o aplicativo Compawion com cão feliz ao lado"
+              alt="Kitchen island with iPad in wooden stand displaying Compawion OS and a happy golden retriever nearby"
               fill
               className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
             />
@@ -439,10 +439,10 @@ export default function LandingPage() {
             <div className="absolute bottom-4 left-4 right-4 p-3 rounded-2xl bg-[#0E1017]/80 backdrop-blur-md border border-white/10 text-left">
               <div className="text-xs font-bold text-white flex items-center gap-1.5">
                 <Radio className="h-3 w-3 text-emerald-400 animate-pulse" />
-                Modo Quiosque Ativo &bull; Estação Cozinha
+                Kiosk Mode Active &bull; Kitchen Ambient Station
               </div>
               <div className="text-[11px] text-text-muted mt-0.5">
-                Transmissão local em tempo real sem atrasos.
+                Ultra-low latency local stream &bull; All rooms protected.
               </div>
             </div>
           </div>
@@ -456,7 +456,7 @@ export default function LandingPage() {
           <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl shadow-black/80 aspect-[4/3] bg-slate-900 group order-2 lg:order-1">
             <Image
               src="/images/peace-of-mind.jpg"
-              alt="Tutora sorrindo acariciando cachorro e gato dormindo com paz de espírito"
+              alt="Smiling pet parent petting a peaceful dog and cat resting on a warm living room rug"
               fill
               className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
             />
@@ -464,10 +464,10 @@ export default function LandingPage() {
             <div className="absolute bottom-4 left-4 right-4 p-3 rounded-2xl bg-[#0E1017]/80 backdrop-blur-md border border-white/10 text-left">
               <div className="text-xs font-bold text-white flex items-center gap-1.5">
                 <Heart className="h-3 w-3 text-rose-400 fill-rose-400" />
-                Mais tempo com quem você mais ama
+                More healthy years with the ones you love most
               </div>
               <div className="text-[11px] text-text-muted mt-0.5">
-                Diagnósticos precoces aumentam a expectativa de vida do animal em até 3 anos.
+                Early detection of heart failure &amp; kidney disease can add up to 3 joyful years to pet lifespans.
               </div>
             </div>
           </div>
@@ -476,30 +476,30 @@ export default function LandingPage() {
           <div className="space-y-6 text-left order-1 lg:order-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-semibold">
               <Smile className="h-3.5 w-3.5 text-rose-400" />
-              <span>Amor sem Culpa</span>
+              <span>Guilt-Free Pet Parenting</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
-              Você nunca mais vai sair de casa com o aperto de não saber se ele está bem.
+              Never leave the house with that knot in your stomach again.
             </h2>
 
             <p className="text-sm text-text-secondary leading-relaxed">
-              Animais de estimação têm o instinto biológico de esconder a dor. Quando
-              percebemos que eles estão doentes, muitas vezes o quadro já avançou.
+              Animals have a deep evolutionary instinct to mask weakness and pain. By the time
+              a dog or cat visibly acts sick, their underlying condition is often already advanced.
             </p>
 
             <p className="text-sm text-text-secondary leading-relaxed">
-              O Compawion monitora as mudanças sutis que os olhos humanos não conseguem
-              ver: micro-alterações no sono, pequenos aumentos na frequência respiratória
-              e quedas de peso graduais. É a certeza de que você está oferecendo o melhor
-              cuidado possível.
+              Compawion tracks the quiet, micro-physiological signals that the human eye cannot see:
+              subtle elevations in sleeping respiratory rate, altered sleep continuity, and gradual
+              weight loss. It is the gold standard of care your best friend deserves.
             </p>
 
             <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs leading-relaxed">
-              &ldquo;Como tutora de um Golden com problema cardíaco, poder olhar no telemóvel
-              e ver que a respiração dele dormindo está normal me devolveu as noites de sono.&rdquo;
+              &ldquo;As a pet parent to an 11-year-old rescue dog with early congestive heart failure,
+              being able to glance at my phone and verify that his sleeping breath rate is steady at 16 BrPM
+              has given me my nights of sleep back.&rdquo;
               <div className="text-[11px] font-bold text-white mt-1.5">
-                — Maria C., Tutora do Bento (Lisboa, PT)
+                — Sarah &amp; David M., London, UK &bull; Foster &amp; Senior Pet Advocates
               </div>
             </div>
           </div>
@@ -507,15 +507,15 @@ export default function LandingPage() {
       </section>
 
       {/* 6. Pricing & Pre-Order Kits */}
-      <section id="planos" className="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+      <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
         <Badge variant="primary" className="mb-3">
-          Planos e Kits
+          Transparent Pricing
         </Badge>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-          Escolha como quer começar a cuidar do seu pet.
+          Choose how you want to protect your pet.
         </h2>
         <p className="text-sm text-text-secondary mt-2 max-w-xl mx-auto">
-          Sem contratos de fidelidade. Cancele quando quiser.
+          No lock-in contracts. Cancel or upgrade anytime in 1 click.
         </p>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-14 text-left">
@@ -523,41 +523,41 @@ export default function LandingPage() {
           <div className="glass-panel p-8 rounded-3xl border-white/10 hover:border-white/20 transition-all flex flex-col justify-between">
             <div>
               <div className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
-                Plano Digital &bull; Use seus Aparelhos
+                Digital Plan &bull; Bring Your Own Devices
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">Compawion Care</h3>
               <p className="text-xs text-text-secondary mb-6">
-                Para quem já tem um iPad ou câmeras Wi-Fi compatíveis (Tapo, Reolink, etc.) em casa.
+                Perfect if you already have an iPad, tablet, or compatible Wi-Fi cameras (Tapo, Reolink, etc.) at home.
               </p>
 
               <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-4xl font-black text-white">€ 9,90</span>
-                <span className="text-xs text-text-muted">/ mês</span>
+                <span className="text-4xl font-black text-white">$9.99</span>
+                <span className="text-xs text-text-muted font-mono">/ month (£7.99 UK)</span>
               </div>
 
               <ul className="space-y-3 text-xs text-text-secondary mb-8">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                  Acesso ilimitado ao app e central CFTV
+                  Unlimited app access &amp; CCTV live dashboard
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                  IA para até 3 câmeras Wi-Fi simultâneas
+                  Edge AI monitoring for up to 3 cameras simultaneously
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                  Assistente Veterinário Claude 5.5 Sonnet 24/7
+                  24/7 Claude 5.5 Sonnet Veterinary AI Companion
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                  Exportação de relatórios clínicos para o veterinário
+                  Printable &amp; exportable veterinary health records
                 </li>
               </ul>
             </div>
 
             <Link href="/register" className="w-full">
               <Button variant="outline" className="w-full h-12 text-xs font-bold rounded-xl border-white/20 hover:border-white/40">
-                Iniciar Teste de 14 Dias Grátis
+                Start 14-Day Free Trial
               </Button>
             </Link>
           </div>
@@ -565,49 +565,49 @@ export default function LandingPage() {
           {/* Card 2: Complete Hardware Kit (Highlight) */}
           <div className="glass-panel p-8 rounded-3xl border-amber-500/40 bg-gradient-to-b from-amber-500/10 via-[#0E1017] to-[#0E1017] shadow-2xl shadow-amber-500/10 relative flex flex-col justify-between">
             <div className="absolute -top-3.5 right-6 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-rose-500 text-white text-[10px] font-extrabold uppercase tracking-wider shadow">
-              Mais Vendido &bull; Edição Especial
+              Most Popular &bull; US &amp; UK Launch Kit
             </div>
 
             <div>
               <div className="text-xs font-bold text-amber-300 uppercase tracking-wider mb-2">
-                Kit Físico Completo + 3 Meses Grátis
+                Full Physical Kit + 3 Months Included
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Kit Guardião Smart Bed</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">Smart Bed Guardian Kit</h3>
               <p className="text-xs text-text-secondary mb-6">
-                Receba o Tapete Inteligente Ortopédico montado na sua porta + Câmera Wi-Fi de alta definição.
+                Delivered right to your doorstep: Complete orthopedic smart bed with embedded telemetry + 1080p HD AI camera.
               </p>
 
               <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-4xl font-black text-white">€ 89,00</span>
-                <span className="text-xs text-text-muted">taxa única do hardware</span>
+                <span className="text-4xl font-black text-white">$99.00</span>
+                <span className="text-xs text-text-muted font-mono">one-time (£79.00 UK)</span>
               </div>
               <p className="text-[11px] text-amber-300 font-medium mb-6">
-                Inclui 3 meses de assinatura do app grátis (depois € 9,90/mês)
+                Includes 3 months of Compawion Care free (then $9.99/mo)
               </p>
 
               <ul className="space-y-3 text-xs text-text-secondary mb-8">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                  <b>1x Tapete Inteligente Ortopédico</b> (com capa lavável)
+                  <b>1x Orthopedic Smart Bed</b> (washable chew-resistant cover)
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                  <b>Sensores BCG</b> de batimentos, respiração e peso
+                  <b>Medical-grade BCG sensors</b> (heart rate, breathing, &amp; weight)
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                  <b>Cabo magnético anti-acidente</b> com desengate rápido
+                  <b>Magnetic quick-release safety cord</b> (trip-proof)
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                  Garantia de 3 anos europeia e entrega em 48h (PT/ES)
+                  3-year replacement warranty &bull; Fast shipping to US &amp; UK
                 </li>
               </ul>
             </div>
 
             <Link href="/register" className="w-full">
               <Button className="w-full h-12 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white shadow-lg shadow-amber-500/25 border-0">
-                Reservar Meu Kit Guardião
+                Reserve Your Guardian Kit
               </Button>
             </Link>
           </div>
@@ -623,26 +623,26 @@ export default function LandingPage() {
               COMPAWION CARE
             </span>
             <span className="text-white/20">&bull;</span>
-            <span>A Inteligência Invisível que Protege o seu Pet</span>
+            <span>Invisible Intelligence Watching Over Your Pet</span>
           </div>
 
           <div className="flex items-center gap-6">
-            <a href="#tapete" className="hover:text-white transition-colors">
-              O Tapete
+            <a href="#smart-bed" className="hover:text-white transition-colors">
+              The Smart Bed
             </a>
             <a href="#cameras" className="hover:text-white transition-colors">
-              Câmeras
+              CCTV Cameras
             </a>
-            <a href="#ipad" className="hover:text-white transition-colors">
-              iPad
+            <a href="#ipad-station" className="hover:text-white transition-colors">
+              iPad Station
             </a>
             <Link href="/login" className="hover:text-white transition-colors">
-              Área do Tutor
+              Pet Parent Portal
             </Link>
           </div>
 
           <p className="font-mono text-[11px]">
-            &copy; {new Date().getFullYear()} Compawion OS. Feito com amor para pets em Portugal e Europa.
+            &copy; {new Date().getFullYear()} Compawion OS. Crafted with love for pets across the United States &amp; the United Kingdom.
           </p>
         </div>
       </footer>

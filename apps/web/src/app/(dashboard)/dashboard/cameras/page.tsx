@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CctvMatrixView } from "@/features/cameras/components/CctvMatrixView";
 import type { CameraDevice } from "@/features/cameras/components/LiveCameraPlayer";
 
-export const metadata = { title: "Central de CFTV & Câmeras com IA" };
+export const metadata = { title: "CCTV & AI Guardian Matrix — Compawion" };
 
 export default async function CamerasPage() {
   let dbCameras: Array<Record<string, unknown>> = [];

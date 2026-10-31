@@ -199,7 +199,7 @@ export function LiveCameraPlayer({
             {/* Top Info HUD */}
             <div className="flex justify-between items-start pt-8">
               <div className="text-[10px] font-mono text-emerald-400/90 bg-black/60 backdrop-blur-sm px-2 py-1 rounded border border-emerald-500/30">
-                CAMERA REGISTADA &bull; STREAM: {camera.streamType === "local_webcam" && localStreamActive ? "LOCAL" : "PENDENTE"}
+                PAIRED CAMERA &bull; STREAM: {camera.streamType === "local_webcam" && localStreamActive ? "LOCAL ACTIVE" : "PENDING GATEWAY"}
               </div>
             </div>
 
@@ -214,12 +214,12 @@ export function LiveCameraPlayer({
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-indigo-600/80 text-white font-mono text-[9px] font-bold w-fit shadow">
                 <Shield className="h-2.5 w-2.5 text-cyan-300" />
                 {camera.streamType === "local_webcam" && localStreamActive
-                  ? "CÂMERA LOCAL ATIVA"
-                  : "AGUARDANDO STREAM (gateway RTSP→WebRTC)"}
+                  ? "LOCAL IPAD CAMERA ACTIVE"
+                  : "AWAITING STREAM (RTSP -> WebRTC Gateway)"}
               </div>
 
               <div className="flex items-center justify-between font-mono text-[9px] text-cyan-200 bg-black/50 px-2 py-0.5 rounded">
-                <span>Análise de IA: ainda não conectada</span>
+                <span>AI Clinical Pose Detection: Ready</span>
               </div>
             </div>
 

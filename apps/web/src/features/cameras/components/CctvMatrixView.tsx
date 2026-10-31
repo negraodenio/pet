@@ -101,7 +101,7 @@ export function CctvMatrixView({ initialCameras }: CctvMatrixViewProps) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-extrabold text-white">Central de CFTV &amp; AI Guardian</h2>
+                <h2 className="text-lg font-extrabold text-white">CCTV &amp; AI Guardian Matrix</h2>
                 <Badge variant="success" className="font-mono text-[10px]">
                   {cameras.filter((c) => c.status === "online").length} CAMERAS ONLINE
                 </Badge>
@@ -196,9 +196,9 @@ export function CctvMatrixView({ initialCameras }: CctvMatrixViewProps) {
       {cameras.length === 0 ? (
         <div className="glass-panel p-10 text-center space-y-3">
           <Camera className="h-8 w-8 text-indigo-400 mx-auto" />
-          <h3 className="text-base font-bold text-white">Nenhuma câmera registada</h3>
+          <h3 className="text-base font-bold text-white">No Cameras Connected Yet</h3>
           <p className="text-xs text-text-muted max-w-md mx-auto">
-            Registe a sua primeira câmera (Tapo, Reolink, ONVIF/RTSP ou a câmera do iPad) para começar.
+            Pair your first camera (TP-Link Tapo, Reolink, generic ONVIF/RTSP, or this iPad&apos;s camera) to begin live monitoring.
           </p>
         </div>
       ) : gridLayout === "1x1" && focusedCamera ? (
