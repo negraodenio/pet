@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compawion OS — Official Business Model, Unit Economics & Global Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #08090E;
+      --bg-card: #0E1017;
+      --bg-card-hover: #141722;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(245, 158, 11, 0.3);
+      --amber: #F59E0B;
+      --rose: #F43F5E;
+      --indigo: #6366F1;
+      --emerald: #10B981;
+      --cyan: #06B6D4;
+      --text-primary: #FFFFFF;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding-bottom: 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Background Glows */
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-1 { top: -100px; left: 20%; width: 500px; height: 500px; background: rgba(245, 158, 11, 0.12); }
+    .glow-2 { top: 30%; right: 10%; width: 450px; height: 450px; background: rgba(99, 102, 241, 0.10); }
+    .glow-3 { bottom: 10%; left: 10%; width: 400px; height: 400px; background: rgba(16, 185, 129, 0.08); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header & Hero */
+    header {
+      padding: 60px 0 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 50px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-family: var(--font-mono);
+    }
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #FCD34D;
+    }
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6EE7B7;
+    }
+    .badge-indigo {
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #A5B4FC;
+    }
+
+    h1 {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #FCD34D, #F43F5E, #A5B4FC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 780px;
+      line-height: 1.6;
+    }
+
+    .meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 30px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .meta-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+    .meta-value { color: var(--text-primary); font-weight: 700; margin-top: 2px; }
+
+    /* Sections */
+    section {
+      margin-bottom: 70px;
+    }
+    .section-header {
+      margin-bottom: 30px;
+    }
+    .section-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Grid Layouts */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+    }
+    .card-highlight {
+      border-color: rgba(245, 158, 11, 0.35);
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, rgba(14, 16, 23, 1) 100%);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    /* Price Tag */
+    .price-box {
+      margin: 16px 0 24px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .price-large {
+      font-size: 36px;
+      font-weight: 900;
+      font-family: var(--font-mono);
+      letter-spacing: -1px;
+    }
+    .price-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Lists */
+    .bullet-list {
+      list-style: none;
+      space-y: 10px;
+    }
+    .bullet-list li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .bullet-list li span.icon {
+      color: var(--emerald);
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--bg-card);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+    th {
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    td {
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.015); }
+    td strong { color: var(--text-primary); }
+
+    /* Timeline Roadmap */
+    .roadmap {
+      position: relative;
+      padding-left: 30px;
+    }
+    .roadmap::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      left: 7px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--amber), var(--indigo), var(--emerald));
+    }
+    .roadmap-step {
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .roadmap-step:last-child { margin-bottom: 0; }
+    .roadmap-dot {
+      position: absolute;
+      left: -30px;
+      top: 6px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      border: 3px solid var(--amber);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    }
+    .roadmap-dot.indigo { border-color: var(--indigo); box-shadow: 0 0 12px rgba(99, 102, 241, 0.5); }
+    .roadmap-dot.emerald { border-color: var(--emerald); box-shadow: 0 0 12px rgba(16, 185, 129, 0.5); }
+    .roadmap-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+    }
+    .roadmap-phase {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .roadmap-phase.indigo { color: var(--indigo); }
+    .roadmap-phase.emerald { color: var(--emerald); }
+    .roadmap-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    /* Print styling */
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .glow-orb { display: none !important; }
+      .card, .table-container, .roadmap-content { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
+      .price-large, h1 span, .section-title { color: #000 !important; -webkit-text-fill-color: initial !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-orb glow-1"></div>
+  <div class="glow-orb glow-2"></div>
+  <div class="glow-orb glow-3"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="badge badge-amber">COMPAWION OS &bull; MASTER STRATEGY DOCUMENT &bull; STRICT EXECUTION</div>
+      <h1>Compawion Care<br><span>Business Model, Launch Roadmap &amp; Unit Economics</span></h1>
+      <p class="lead">
+        The complete, step-by-step master operational blueprint for scaling Compawion from 0 to 10,000+ active subscribers across the United States, United Kingdom, and Europe.
+      </p>
+
+      <div class="meta-strip">
+        <div class="meta-item">
+          <span class="meta-label">Primary Markets</span>
+          <span class="meta-value">United States &amp; United Kingdom</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Secondary Markets</span>
+          <span class="meta-value">Portugal, Spain, Germany, Canada</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Business Model</span>
+          <span class="meta-value">Hardware-Enabled High-Margin SaaS</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">LTV / CAC Ratio</span>
+          <span class="meta-value">10.2 : 1 (Projected)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Live Production App</span>
+          <span class="meta-value"><a href="https://pet-omega-lemon.vercel.app" target="_blank" style="color: var(--amber); text-decoration: none;">pet-omega-lemon.vercel.app</a></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: EXECUTIVE THESIS -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">💡 1. The Core Market Thesis</div>
+        <div class="section-subtitle">Why Compawion wins against legacy pet cameras and uncomfortable wearables</div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">❌ The Wearable Failure</div>
+          <div class="card-desc">
+            Smart collars (Fi, Whistle) irritate pets, require constant battery charging, and cause friction with elderly or anxious pets who reject collars indoors.
+          </div>
+          <p style="font-size: 12px; color: var(--rose); font-weight: 700;">Compawion Solution: 100% Invisible Bed Sensors (Zero Wearables).</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">❌ The Camera Fatigue</div>
+          <div class="card-desc">
+            Standard cameras (Furbo, Ring) blast owners with 50+ useless push notifications daily for wind, shadows, and robot vacuums. Pet parents eventually turn them off.
+          </div>
+          <p style="font-size: 12px; color: var(--indigo); font-weight: 700;">Compawion Solution: Edge AI alerts only for real medical signs (coughing, retching, limping).</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">❌ Late Diagnosis Tragedy</div>
+          <div class="card-desc">
+            Dogs and cats biologically hide pain. By the time a senior pet visibly limps or vomits, congestive heart failure or renal failure has often progressed too far.
+          </div>
+          <p style="font-size: 12px; color: var(--emerald); font-weight: 700;">Compawion Solution: Continuous night respiration rate (SRR) alerts vets weeks ahead.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: REVENUE ARCHITECTURE -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">💰 2. Pricing &amp; Revenue Architecture</div>
+        <div class="section-subtitle">How Compawion monetizes with recurring, high-margin monthly subscription cashflow</div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Tier 1: Digital SaaS -->
+        <div class="card">
+          <div class="badge badge-indigo">Stream A &bull; Pure SaaS (Bring Your Own Hardware)</div>
+          <div class="card-title">Compawion Care Digital</div>
+          <div class="card-desc">
+            For pet parents who already own an iPad/tablet or supported Wi-Fi cameras (TP-Link Tapo, Reolink, ONVIF) at home.
+          </div>
+
+          <div class="price-box">
+            <div class="price-large">$9.99 <span style="font-size: 16px; font-weight: 400; color: var(--text-muted);">/ month</span></div>
+            <div class="price-sub">£7.99 / mo (UK) &bull; €9.90 / mo (EU) &bull; Annual discount: $99 / yr</div>
+          </div>
+
+          <ul class="bullet-list">
+            <li><span class="icon">✓</span> Multi-room CCTV Guardian Matrix (up to 3 cameras)</li>
+            <li><span class="icon">✓</span> 24/7 Claude 5.5 Sonnet Veterinary AI Companion</li>
+            <li><span class="icon">✓</span> Two-way audio push-to-talk &amp; 432 Hz calming acoustics</li>
+            <li><span class="icon">✓</span> Exportable clinical PDF health dossiers for vet visits</li>
+            <li><span class="icon">✓</span> 14-day free trial (credit card upfront)</li>
+          </ul>
+
+          <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--emerald);">
+            Gross Margin: ~86% (Stripe fee 2.9% + AI tokens $0.80/pet/mo + hosting $0.40)
+          </div>
+        </div>
+
+        <!-- Tier 2: Physical Hardware Kit -->
+        <div class="card card-highlight">
+          <div class="badge badge-amber">Stream B &bull; The Trojan Horse Acquisition Kit</div>
+          <div class="card-title">Smart Bed Guardian Kit</div>
+          <div class="card-desc">
+            Complete physical hardware package delivered to the pet parent&apos;s door, pre-configured for instant zero-friction Wi-Fi pairing.
+          </div>
+
+          <div class="price-box">
+            <div class="price-large">$99.00 <span style="font-size: 16px; font-weight: 400; color: var(--text-muted);">upfront</span></div>
+            <div class="price-sub">£79.00 (UK) &bull; €89.00 (EU) &bull; Includes 3 Months of Care Free, then $9.99/mo</div>
+          </div>
+
+          <ul class="bullet-list">
+            <li><span class="icon">✓</span> <b>1x Orthopedic Smart Bed</b> with machine-washable waterproof cover</li>
+            <li><span class="icon">✓</span> <b>Embedded BCG Piezoelectric Film</b> (Resting heart rate &amp; breath rate)</li>
+            <li><span class="icon">✓</span> <b>Four Strain-Gauge Load Cells</b> for daily automatic weigh-ins</li>
+            <li><span class="icon">✓</span> <b>Chew-resistant magnetic quick-release</b> power safety cord</li>
+            <li><span class="icon">✓</span> <b>1x HD 1080p Wi-Fi Camera</b> with motorized PTZ pan/tilt</li>
+          </ul>
+
+          <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--amber);">
+            Hardware BOM Cost: ~$42 &bull; Instant Hardware Profit: ~$57 &bull; Break-Even Day 1
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional B2B Revenue -->
+      <div class="grid-2" style="margin-top: 24px;">
+        <div class="card">
+          <div class="card-title">🏥 Stream C: Veterinary B2B Clinical Portal</div>
+          <div class="card-desc">
+            Vets pay <b>$49/month per clinic</b> to monitor their post-op or chronic cardiac/renal patients remotely through a centralized clinical dashboard.
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted);">Creates a sticky referral loop: vets prescribe Compawion to their patients.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📦 Stream D: Consumables &amp; Add-Ons</div>
+          <div class="card-desc">
+            Replacement designer bed covers ($24.99), auxiliary room sensor pods ($29.00), and premium joint health supplement subscriptions.
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted);">Expands Average Revenue Per User (ARPU) by +22% annually.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: UNIT ECONOMICS TABLE -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">📊 3. Unit Economics Breakdown (Per Pet Subscriber)</div>
+        <div class="section-subtitle">Disciplined SaaS unit economics designed for cashflow positivity from Month 1</div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Year 1 (Per User)</th>
+              <th>Year 2+ (Per User)</th>
+              <th>Notes &amp; Operational Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Customer Acquisition Cost (CAC)</strong></td>
+              <td>$32.00</td>
+              <td>$24.00</td>
+              <td>UGC sleeping pet video ads, vet clinic referrals, organic TikTok/Reels.</td>
+            </tr>
+            <tr>
+              <td><strong>Hardware Revenue (Upfront)</strong></td>
+              <td>$99.00</td>
+              <td>—</td>
+              <td>Full retail hardware sale covering all BOM and shipping costs.</td>
+            </tr>
+            <tr>
+              <td><strong>Hardware Cost of Goods (BOM + 3PL)</strong></td>
+              <td>($42.00)</td>
+              <td>—</td>
+              <td>ESP32-S3 + HX711 + PVDF film + foam + cover + magnetic cord + packaging.</td>
+            </tr>
+            <tr>
+              <td><strong>Net Hardware Margin on Day 1</strong></td>
+              <td><span style="color: var(--emerald); font-weight: 700;">+$57.00 profit</span></td>
+              <td>—</td>
+              <td><strong>Zero hardware subsidy.</strong> CAC is fully recouped on Day 1!</td>
+            </tr>
+            <tr>
+              <td><strong>Subscription Revenue (Annual)</strong></td>
+              <td>$89.91 (9 mos paid)</td>
+              <td>$119.88 (12 mos)</td>
+              <td>Month 1-3 included free with hardware purchase, then $9.99/mo.</td>
+            </tr>
+            <tr>
+              <td><strong>SaaS Cost of Goods (AI Tokens + DB + Stripe)</strong></td>
+              <td>($14.40)</td>
+              <td>($18.00)</td>
+              <td>Claude 5.5 Sonnet tokens ($0.80/mo) + Supabase ($0.30/mo) + Stripe ($0.40/mo).</td>
+            </tr>
+            <tr>
+              <td><strong>Average Retention Lifetime</strong></td>
+              <td>36 months</td>
+              <td>36 months</td>
+              <td>Senior pets monitored for life; emotional switching cost is extremely high.</td>
+            </tr>
+            <tr>
+              <td><strong>Customer Lifetime Value (LTV)</strong></td>
+              <td><strong>$328.00</strong></td>
+              <td><strong>$328.00</strong></td>
+              <td>LTV / CAC Ratio = <strong>10.2 : 1</strong> (Top decile for consumer hardware-SaaS).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 4: HARDWARE PROCUREMENT -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">🛠️ 4. Hardware Sourcing &amp; Procurement Plan</div>
+        <div class="section-subtitle">Verified suppliers across China, Portugal &amp; Spain for maximum margin and low minimum order quantities (MOQ)</div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="badge badge-amber">China &bull; Electronics &amp; Sensors</div>
+          <div class="card-title">Shenzhen / Dongguan Hub</div>
+          <ul class="bullet-list">
+            <li><span class="icon">▸</span> <b>ESP32-S3 MCU:</b> $3.80 (Expressif official or LCSC)</li>
+            <li><span class="icon">▸</span> <b>PVDF Piezoelectric Film Sensor:</b> $3.90 (Measurement Specialties / LDT0)</li>
+            <li><span class="icon">▸</span> <b>HX711 24-bit ADC + 4x Load Cells:</b> $4.20 (50kg x 4)</li>
+            <li><span class="icon">▸</span> <b>Custom Magnetic Quick-Disconnect Cable:</b> $2.20 (Anti-trip hazard)</li>
+            <li><span class="icon">▸</span> <b>Total Electronics Cost:</b> <b>$14.10 / unit</b></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="badge badge-indigo">Portugal &amp; Spain &bull; Assembly &amp; Textiles</div>
+          <div class="card-title">Iberian Manufacturing Hub</div>
+          <ul class="bullet-list">
+            <li><span class="icon">▸</span> <b>Orthopedic Memory Foam Base:</b> $11.50 (Guimarães / Valencia textile mills)</li>
+            <li><span class="icon">▸</span> <b>Waterproof Inner + Machine-Washable Outer Cover:</b> $7.00</li>
+            <li><span class="icon">▸</span> <b>Assembly, Flash Testing &amp; Packaging:</b> $4.50</li>
+            <li><span class="icon">▸</span> <b>Branded Kraft Box &amp; Manual:</b> $2.00</li>
+            <li><span class="icon">▸</span> <b>Total Assembly Cost:</b> <b>$25.00 / unit</b></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="badge badge-emerald">Off-The-Shelf &bull; Video Eyes</div>
+          <div class="card-title">Wi-Fi Camera Ecosystem</div>
+          <ul class="bullet-list">
+            <li><span class="icon">▸</span> <b>TP-Link Tapo C200 / C100:</b> Wholesale ~$18 - $22</li>
+            <li><span class="icon">▸</span> <b>Reolink E1:</b> ~$28</li>
+            <li><span class="icon">▸</span> <b>iPad Ambient Sentinel:</b> $0 (utilizes existing tablet in home)</li>
+            <li><span class="icon">▸</span> <b>Integration Protocol:</b> Standard ONVIF / RTSP &rarr; WebRTC gateway</li>
+            <li><span class="icon">▸</span> <b>No camera lock-in:</b> Eliminates costly custom camera tooling!</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: STRICT EXECUTION ROADMAP -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">🚀 5. Strict Execution Roadmap (Month-by-Month)</div>
+        <div class="section-subtitle">Follow this sequence without deviation to hit $100,000+ MRR within 12 months</div>
+      </div>
+
+      <div class="roadmap">
+        <!-- Phase 0 -->
+        <div class="roadmap-step">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <div class="roadmap-phase">Phase 0 &bull; Current Milestone (Completed)</div>
+            <div class="roadmap-title">Live Cloud Architecture &amp; Senior-Friendly App Core</div>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+              Production web app active on Vercel (<code>pet-omega-lemon.vercel.app</code>). Supabase database fully initialized with tenant isolation and <code>smart_bed_telemetry</code> tables. OpenRouter Claude 5.5 Sonnet integrated for veterinary inference. Working senior demo account created (<code>demo@compawion.com</code>).
+            </p>
+          </div>
+        </div>
+
+        <!-- Phase 1 -->
+        <div class="roadmap-step">
+          <div class="roadmap-dot indigo"></div>
+          <div class="roadmap-content">
+            <div class="roadmap-phase indigo">Phase 1 &bull; Months 1 to 3 (Target: 100 Paid Beta Guardians)</div>
+            <div class="roadmap-title">Pilot Launch in US &amp; UK (English First)</div>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+              <b>Target Revenue:</b> $1,000 / mo MRR &bull; <b>Hardware Batch:</b> 100 prototype units assembled in Lisbon workshop.
+            </p>
+            <ul class="bullet-list">
+              <li><span class="icon">▸</span> Hand-assemble 100 Smart Bed kits using Lisbon textile partner and Shenzhen electronics.</li>
+              <li><span class="icon">▸</span> Direct outreach on Reddit (<code>r/AskVet</code>, <code>r/goldenretrievers</code>, <code>r/seniordogs</code>) and Facebook Senior Pet groups.</li>
+              <li><span class="icon">▸</span> Onboard 50 beta guardians in the United States and 50 in the United Kingdom.</li>
+              <li><span class="icon">▸</span> Validate zero false-positive algorithm: ensure no false alarms for breathing or heart rate during sleep.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="roadmap-step">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <div class="roadmap-phase">Phase 2 &bull; Months 4 to 6 (Target: 1,500 Active Subscribers)</div>
+            <div class="roadmap-title">Public Commercial Launch &amp; Kickstarter Authority</div>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+              <b>Target Revenue:</b> $15,000 / mo MRR &bull; <b>Hardware Pre-Orders:</b> $150,000 via Kickstarter/Indiegogo.
+            </p>
+            <ul class="bullet-list">
+              <li><span class="icon">▸</span> Launch Kickstarter campaign titled <i>&ldquo;Compawion: The Invisible Smart Bed that Watches Over Your Pet&apos;s Heart&rdquo;</i>.</li>
+              <li><span class="icon">▸</span> Run UGC video ads: Real clips of sleeping dogs with live glowing BPM and respiration numbers.</li>
+              <li><span class="icon">▸</span> Contract 3PL fulfillment centers in New Jersey (US) and Northampton (UK) for 48h doorstep delivery.</li>
+              <li><span class="icon">▸</span> Roll out Stripe auto-billing with automated trial-to-paid conversion emails.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="roadmap-step">
+          <div class="roadmap-dot emerald"></div>
+          <div class="roadmap-content">
+            <div class="roadmap-phase emerald">Phase 3 &bull; Months 7 to 12 (Target: 10,000 Active Subscribers)</div>
+            <div class="roadmap-title">Veterinary B2B Network &amp; Mass Scale</div>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+              <b>Target Revenue:</b> $100,000+ / mo MRR ($1.2M ARR) &bull; <b>Valuation Target:</b> $15M - $20M Series A.
+            </p>
+            <ul class="bullet-list">
+              <li><span class="icon">▸</span> Launch the Veterinary Affiliate Network: Clinics earn 20% recurring commission on every patient prescribed Compawion.</li>
+              <li><span class="icon">▸</span> Release native iOS and Android companion apps (using React Native / Expo wrapper over web core).</li>
+              <li><span class="icon">▸</span> Expand sales to secondary Tier-2 markets: Portugal, Spain, Germany, France.</li>
+              <li><span class="icon">▸</span> Begin FDA / EMA veterinary remote patient monitoring device certification studies.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: MARKETING & CUSTOMER ACQUISITION PLAYBOOK -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">📢 6. Marketing &amp; Customer Acquisition (CAC) Playbook</div>
+        <div class="section-subtitle">How to acquire US &amp; UK pet parents under $35 CAC with zero ad money wasted</div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">1. The "Sleeping Heartbeat" UGC Ad Hook</div>
+          <div class="card-desc">
+            A 7-second viral TikTok / Instagram Reel: Camera zooms in on a senior Golden Retriever sleeping deeply in the afternoon sun. Floating UI shows <code>Heart Rate: 72 BPM • Breathing: 16 BrPM</code>.
+          </div>
+          <p style="font-size: 12px; color: var(--amber); font-weight: 700;">Copy: "He thinks it's just a comfy bed. We know his heart is safe."</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">2. Veterinary Prescription Loop</div>
+          <div class="card-desc">
+            Partner with cardiologists and geriatric pet veterinarians in London and California. Provide free display units for clinic waiting rooms.
+          </div>
+          <p style="font-size: 12px; color: var(--indigo); font-weight: 700;">Vets get paid $2/mo per active patient for remote monitoring access.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">3. High-Contrast Senior Family Gifting</div>
+          <div class="card-desc">
+            Target adult children (30-45 years old) buying Compawion for their elderly parents who live with a companion dog or cat.
+          </div>
+          <p style="font-size: 12px; color: var(--emerald); font-weight: 700;">Positioning: "Peace of mind for Mom, dad, and their best friend."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: RISK MITIGATION MATRIX -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">🛡️ 7. Operational Risk Mitigation Matrix</div>
+        <div class="section-subtitle">Anticipating challenges and having ready solutions before scaling</div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Risk</th>
+              <th>Probability</th>
+              <th>Impact</th>
+              <th>Mitigation Strategy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pet Chewing Power Cable</strong></td>
+              <td>Medium</td>
+              <td>High</td>
+              <td>Magnetic breakaway coupling with 5V DC safe low voltage; braided chew-resistant sleeve.</td>
+            </tr>
+            <tr>
+              <td><strong>Urination / Liquid Spills on Bed</strong></td>
+              <td>High</td>
+              <td>Medium</td>
+              <td>IP67 ultrasonic-sealed sensor layer beneath waterproof TPU liner; machine-washable outer shell.</td>
+            </tr>
+            <tr>
+              <td><strong>Two Pets Sharing the Same Bed</strong></td>
+              <td>Medium</td>
+              <td>Low</td>
+              <td>Multi-point load cell weight signature separation; camera cross-references pet identity.</td>
+            </tr>
+            <tr>
+              <td><strong>AI Hallucination on Health Advice</strong></td>
+              <td>Low</td>
+              <td>High</td>
+              <td>Strict prompt guardrails on Claude 5.5 Sonnet: triage disclaimers + 1-click Emergency Vet direct dial.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: gap: 20px;">
+      <div style="font-size: 13px; color: var(--text-muted);">
+        <strong>Compawion OS</strong> &bull; Confidential Business Operations Manual &bull; &copy; 2026
+      </div>
+      <div>
+        <a href="https://pet-omega-lemon.vercel.app" target="_blank" style="display: inline-block; padding: 10px 20px; background: linear-gradient(135deg, #F59E0B, #6366F1); color: #fff; text-decoration: none; font-weight: 700; border-radius: 12px; font-size: 12px;">
+          Launch Compawion Production &rarr;
+        </a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
