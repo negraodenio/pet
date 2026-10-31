@@ -10,9 +10,15 @@ import { CognitiveReasoningEngine } from "@/lib/services/CognitiveReasoningEngin
  * Grounded in 3 Layers: Cognitive Timeline + LCM Runtime + CRE Reasoning Results.
  */
 export async function POST(request: Request) {
-  const { messages } = await request.json();
-
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const { messages } = await request.json();
 
   // Fetch pet context, LCM states, CRE reasoning results, and Timeline events
   const [petsResult, timelineEvents, topInsights] = await Promise.all([
@@ -81,7 +87,8 @@ GUIDELINES:
         "X-Title": "Compawion OS",
       },
     });
-    model = openrouter("openai/gpt-4o-2024-11-20");
+    const targetModel = process.env.OPENROUTER_MODEL?.trim() || "anthropic/claude-sonnet-5.5";
+    model = openrouter(targetModel);
   } else {
     const openai = createOpenAI({
       apiKey: openaiKey || "dummy-key",

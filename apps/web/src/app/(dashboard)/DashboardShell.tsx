@@ -55,15 +55,15 @@ interface DashboardShellProps {
 }
 
 const navigation = [
-  { name: "Home", href: "/dashboard", icon: Home },
-  { name: "Companion", href: "/dashboard/companion", icon: Dog },
-  { name: "Intelligence", href: "/dashboard/assistant", icon: Brain },
-  { name: "Health", href: "/dashboard/health", icon: Heart },
-  { name: "Home Spaces", href: "/dashboard/cameras", icon: LayoutGrid },
-  { name: "Devices", href: "/dashboard/devices", icon: Cpu },
-  { name: "Veterinary", href: "/dashboard/veterinary", icon: Stethoscope },
-  { name: "Family", href: "/dashboard/family", icon: Users },
-  { name: "Platform", href: "/dashboard/settings", icon: Settings },
+  { name: "Painel Principal", href: "/dashboard", icon: Home },
+  { name: "Meu Pet", href: "/dashboard/companion", icon: Dog },
+  { name: "Assistente IA", href: "/dashboard/assistant", icon: Brain },
+  { name: "Saúde & Vitais", href: "/dashboard/health", icon: Heart },
+  { name: "Central de Câmeras (CFTV)", href: "/dashboard/cameras", icon: LayoutGrid },
+  { name: "Dispositivos & Tapete", href: "/dashboard/devices", icon: Cpu },
+  { name: "Prontuário Veterinário", href: "/dashboard/veterinary", icon: Stethoscope },
+  { name: "Família & Tutores", href: "/dashboard/family", icon: Users },
+  { name: "Configurações", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function DashboardShell({

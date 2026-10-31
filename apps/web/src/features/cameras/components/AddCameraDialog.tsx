@@ -1,36 +1,91 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, QrCode, Bluetooth, Wifi, CheckCircle2, Camera } from "lucide-react";
+import {
+  Plus,
+  QrCode,
+  Bluetooth,
+  Wifi,
+  CheckCircle2,
+  Camera,
+  Tablet,
+  Video,
+  Info,
+  Server,
+  HelpCircle,
+} from "lucide-react";
 import { Button } from "@/shared/components/ui/Button";
 import { Input } from "@/shared/components/ui/Input";
 import { cn } from "@/lib/utils";
+import { registerDeviceAction } from "@/server/actions/devices";
 
-/* =========================================================================
-   AddCameraDialog — 3-step zero-config onboarding modal
-   ========================================================================= */
+type CameraBrandOption = "tapo" | "ipad_ambient" | "reolink" | "xiaomi" | "onvif";
 
 export function AddCameraDialog() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [cameraName, setCameraName] = useState("Living Room Cam");
+  const [selectedBrand, setSelectedBrand] = useState<CameraBrandOption>("tapo");
+  const [cameraName, setCameraName] = useState("Living Room Cam (Tapo)");
   const [locationName, setLocationName] = useState("Living Room");
+  const [cameraIp, setCameraIp] = useState("192.168.1.120");
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  const handleStartPairing = () => {
-    setIsConnecting(true);
-    setTimeout(() => {
-      setIsConnecting(false);
-      setStep(2);
-    }, 1500);
+  const brandPresets: Record<CameraBrandOption, { name: string; defaultName: string; hint: string }> = {
+    tapo: {
+      name: "TP-Link Tapo (C200 / C100)",
+      defaultName: "Living Room (Tapo C200)",
+      hint: "No app Tapo: Configurações da Câmera -> Avançado -> Conta da Câmera (RTSP Porta 554).",
+    },
+    ipad_ambient: {
+      name: "iPad AI Station (Câmera do iPad)",
+      defaultName: "iPad Ambient Camera (Cozinha/Sala)",
+      hint: "Usa a câmera frontal do iPad embutida com inteligência artificial instantânea.",
+    },
+    reolink: {
+      name: "Reolink (E1 / Lumus)",
+      defaultName: "Bedroom (Reolink E1)",
+      hint: "No app Reolink: Network Settings -> Advanced -> Server Ports -> Habilitar RTSP/ONVIF.",
+    },
+    xiaomi: {
+      name: "Xiaomi / Imilab / Yi",
+      defaultName: "Patio Cam (Xiaomi 360°)",
+      hint: "Transmissão RTSP ativada pelo firmware ou integração ONVIF.",
+    },
+    onvif: {
+      name: "Câmera CFTV Genérica (ONVIF / RTSP)",
+      defaultName: "Security Cam (RTSP)",
+      hint: "Funciona com qualquer câmera IP que suporte stream RTSP padrão.",
+    },
   };
 
-  const handleWiFiSetup = () => {
+  const handleSelectBrand = (brand: CameraBrandOption) => {
+    setSelectedBrand(brand);
+    setCameraName(brandPresets[brand].defaultName);
+  };
+
+  const handleStartPairing = () => {
+    setStep(2);
+  };
+
+  const handleWiFiSetup = async () => {
     setIsConnecting(true);
-    setTimeout(() => {
-      setIsConnecting(false);
-      setStep(3);
-    }, 1800);
+    setSaveError(null);
+    const fd = new FormData();
+    fd.set("name", cameraName);
+    fd.set("deviceType", "camera");
+    fd.set("serialNumber", `${selectedBrand}-${selectedBrand === "ipad_ambient" ? crypto.randomUUID().slice(0, 8) : cameraIp}`);
+    fd.set("locationName", locationName);
+    // NOTE: camera password is intentionally NOT sent/stored. It will live only in the local gateway.
+    const res = await registerDeviceAction({}, fd);
+    setIsConnecting(false);
+    if (res.error) {
+      setSaveError(res.error);
+      return;
+    }
+    setStep(3);
   };
 
   const handleFinish = () => {
@@ -41,8 +96,12 @@ export function AddCameraDialog() {
 
   if (!open) {
     return (
-      <Button onClick={() => setOpen(true)} icon={<Plus className="h-4 w-4" />}>
-        Add Camera
+      <Button
+        onClick={() => setOpen(true)}
+        icon={<Plus className="h-4 w-4" />}
+        className="bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-500/20 text-xs font-bold"
+      >
+        Adicionar Câmera
       </Button>
     );
   }
@@ -51,7 +110,7 @@ export function AddCameraDialog() {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 animate-fade-in"
+        className="fixed inset-0 bg-black/75 backdrop-blur-md z-50 animate-fade-in"
         onClick={() => setOpen(false)}
       />
 
@@ -68,75 +127,128 @@ export function AddCameraDialog() {
                 <Camera className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white">Add Compawion Camera</h2>
-                <p className="text-xs text-text-muted">Zero-configuration hardware setup</p>
+                <h2 className="text-base font-bold text-white">Central de CFTV — Adicionar Câmera</h2>
+                <p className="text-xs text-text-muted">Compatível com Câmeras Wi-Fi de Mercado ou iPad</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5 text-xs font-mono">
-              <span className={cn("px-2 py-0.5 rounded-full border", step === 1 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>1. QR</span>
-              <span className={cn("px-2 py-0.5 rounded-full border", step === 2 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>2. WiFi</span>
-              <span className={cn("px-2 py-0.5 rounded-full border", step === 3 ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "text-text-muted border-border")}>3. Done</span>
+              <span className={cn("px-2 py-0.5 rounded-full border", step === 1 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>1. Modelo</span>
+              <span className={cn("px-2 py-0.5 rounded-full border", step === 2 ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40" : "text-text-muted border-border")}>2. Conexão</span>
+              <span className={cn("px-2 py-0.5 rounded-full border", step === 3 ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "text-text-muted border-border")}>3. Pronto</span>
             </div>
           </div>
 
-          {/* Step 1: Scan QR / BLE Pairing */}
+          {/* Step 1: Select Brand / Type */}
           {step === 1 && (
-            <div className="space-y-6 text-center">
-              <div className="relative mx-auto h-44 w-44 rounded-2xl border-2 border-dashed border-indigo-500/40 bg-indigo-500/5 flex flex-col items-center justify-center p-4">
-                <QrCode className="h-16 w-16 text-indigo-400 animate-pulse mb-2" />
-                <span className="text-[11px] font-mono text-indigo-300">Scan QR Code on Camera Box</span>
+            <div className="space-y-4">
+              <label className="text-xs font-semibold text-text-secondary">Escolha o tipo ou marca da câmera:</label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {(Object.keys(brandPresets) as CameraBrandOption[]).map((brand) => (
+                  <button
+                    key={brand}
+                    type="button"
+                    onClick={() => handleSelectBrand(brand)}
+                    className={cn(
+                      "p-3 rounded-xl border text-left transition-all flex items-start gap-2.5",
+                      selectedBrand === brand
+                        ? "bg-indigo-500/20 border-indigo-400 text-white shadow-sm"
+                        : "bg-bg-secondary border-border text-text-secondary hover:border-indigo-500/40 hover:text-white",
+                    )}
+                  >
+                    <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 shrink-0 mt-0.5">
+                      {brand === "ipad_ambient" ? <Tablet className="h-4 w-4" /> : <Video className="h-4 w-4" />}
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold leading-tight">{brandPresets[brand].name}</div>
+                      <div className="text-[10px] text-text-muted mt-0.5">Plug &amp; Play</div>
+                    </div>
+                  </button>
+                ))}
               </div>
-              <p className="text-xs text-text-secondary max-w-sm mx-auto">
-                Point your camera at the QR code printed on the bottom of your Compawion Camera or box.
-              </p>
+
+              {/* Informative Hint Box */}
+              <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-200 text-xs flex items-start gap-2">
+                <Info className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" />
+                <p className="text-[11px] leading-relaxed">
+                  {brandPresets[selectedBrand].hint}
+                </p>
+              </div>
+
               <div className="flex justify-end gap-3 pt-2">
-                <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+                <Button variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
                 <Button
                   onClick={handleStartPairing}
                   loading={isConnecting}
-                  icon={<Bluetooth className="h-4 w-4" />}
+                  className="bg-indigo-600 hover:bg-indigo-500 font-bold"
                 >
-                  Pair via Bluetooth
+                  Continuar
                 </Button>
               </div>
             </div>
           )}
 
-          {/* Step 2: WiFi Configuration & Naming */}
+          {/* Step 2: Connection Details */}
           {step === 2 && (
             <div className="space-y-4">
-              <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs flex items-center gap-2">
-                <Bluetooth className="h-4 w-4 shrink-0 text-indigo-400" />
-                <span>Bluetooth Paired: <b>Compawion Cam-8F42</b></span>
-              </div>
-
               <Input
-                label="Camera Name"
+                label="Nome da Câmera"
                 value={cameraName}
                 onChange={(e) => setCameraName(e.target.value)}
-                placeholder="e.g. Living Room Cam"
+                placeholder="Ex: Sala de Estar (Tapo C200)"
               />
 
               <Input
-                label="Location / Room"
+                label="Cômodo / Localização"
                 value={locationName}
                 onChange={(e) => setLocationName(e.target.value)}
-                placeholder="e.g. Living Room, Garden, Kitchen"
+                placeholder="Ex: Sala, Quarto, Cozinha, Quintal"
               />
 
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-text-secondary">WiFi Network</label>
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-bg-secondary border border-border text-xs text-white">
-                  <Wifi className="h-4 w-4 text-emerald-400" />
-                  <span className="font-semibold">Home_WiFi_5G</span>
-                  <span className="ml-auto font-mono text-[10px] text-emerald-400">Connected</span>
-                </div>
-              </div>
+              {selectedBrand !== "ipad_ambient" ? (
+                <div className="space-y-3 pt-1">
+                  <Input
+                    label="IP Local da Câmera (Wi-Fi)"
+                    value={cameraIp}
+                    onChange={(e) => setCameraIp(e.target.value)}
+                    placeholder="192.168.1.xxx"
+                  />
 
-              <div className="flex justify-end gap-3 pt-4">
-                <Button variant="ghost" onClick={() => setStep(1)}>Back</Button>
-                <Button onClick={handleWiFiSetup} loading={isConnecting}>
-                  Connect Camera
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      label="Usuário RTSP"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="admin"
+                    />
+                    <Input
+                      label="Senha da Câmera"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                    />
+                  </div>
+
+                  <p className="text-[10px] font-mono text-text-muted">
+                    URL RTSP gerada: rtsp://{username}:***@{cameraIp}:554/stream1
+                  </p>
+                </div>
+              ) : (
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span>A câmera frontal deste dispositivo (iPad/computador) será vinculada instantaneamente!</span>
+                </div>
+              )}
+
+              {saveError && (
+                <p className="text-xs text-rose-400">{saveError}</p>
+              )}
+
+              <div className="flex justify-end gap-3 pt-3">
+                <Button variant="ghost" onClick={() => setStep(1)}>Voltar</Button>
+                <Button onClick={handleWiFiSetup} loading={isConnecting} className="bg-indigo-600 hover:bg-indigo-500 font-bold">
+                  Sincronizar Câmera
                 </Button>
               </div>
             </div>
@@ -145,17 +257,20 @@ export function AddCameraDialog() {
           {/* Step 3: Success Confirmation */}
           {step === 3 && (
             <div className="space-y-6 text-center py-4">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 glow">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-lg shadow-emerald-500/20 animate-scale-in">
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Camera Connected Successfully!</h3>
+                <h3 className="text-lg font-bold text-white">Câmera registada!</h3>
                 <p className="text-xs text-text-secondary mt-1 max-w-sm mx-auto">
-                  <b>{cameraName}</b> is online and streaming live AI events for <b>{locationName}</b>.
+                  <b>{cameraName}</b> foi registada em <b>{locationName}</b>.
+                  {selectedBrand === "ipad_ambient"
+                    ? " A câmera deste dispositivo pode ser ativada na central."
+                    : " O vídeo ao vivo fica disponível quando o gateway local (RTSP→WebRTC) estiver instalado."}
                 </p>
               </div>
-              <Button onClick={handleFinish} className="w-full bg-emerald-600 hover:bg-emerald-500">
-                Done & View Live Stream
+              <Button onClick={handleFinish} className="w-full bg-emerald-600 hover:bg-emerald-500 font-bold shadow-lg">
+                Concluir &amp; Abrir Central de Câmeras
               </Button>
             </div>
           )}
